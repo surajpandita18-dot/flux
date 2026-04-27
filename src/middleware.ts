@@ -4,11 +4,19 @@ import { NextResponse, type NextRequest } from 'next/server'
 const PUBLIC_PATHS = ['/auth']
 
 export async function middleware(request: NextRequest) {
+  // If env vars not configured yet, pass through — prevents MIDDLEWARE_INVOCATION_FAILED
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  ) {
+    return NextResponse.next({ request })
+  }
+
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
     {
       cookies: {
         getAll() {
