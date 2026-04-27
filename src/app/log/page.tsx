@@ -11,7 +11,7 @@ export default async function LogPage() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user) redirect('/auth')
+  if (!user) redirect('/')
 
   const { data: profileData } = await supabase
     .from('user_profiles')

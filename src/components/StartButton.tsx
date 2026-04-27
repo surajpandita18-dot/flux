@@ -1,19 +1,21 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 export default function StartButton() {
-  const router = useRouter()
   const [loading, setLoading] = useState(false)
 
   async function handleStart() {
     setLoading(true)
-    const supabase = createClient()
-    await supabase.auth.signInAnonymously()
-    router.push('/onboarding')
-    router.refresh()
+    try {
+      const supabase = createClient()
+      await supabase.auth.signInAnonymously()
+      // Hard redirect so the server picks up the session cookie on mobile
+      window.location.href = '/onboarding'
+    } catch {
+      setLoading(false)
+    }
   }
 
   return (

@@ -8,7 +8,7 @@ export default async function HistoryPage() {
   const supabase = createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth')
+  if (!user) redirect('/')
 
   const { data } = await supabase
     .from('cycle_logs')

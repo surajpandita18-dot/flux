@@ -11,7 +11,7 @@ export default async function PartnerPage() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user) redirect('/auth')
+  if (!user) redirect('/')
 
   const { data: connectionsData } = await supabase
     .from('partner_connections')

@@ -21,7 +21,7 @@ export default async function PartnerViewPage({ params }: Props) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user) redirect('/auth')
+  if (!user) redirect('/')
 
   const { data, error } = await supabase.rpc('get_partner_phase_card', {
     owner_user_id: params.ownerId,

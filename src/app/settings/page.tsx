@@ -9,7 +9,7 @@ export default async function SettingsPage() {
   const supabase = createClient()
 
   const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth')
+  if (!user) redirect('/')
 
   const { data } = await supabase
     .from('partner_connections')
