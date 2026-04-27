@@ -26,6 +26,11 @@ export interface PhasePartner {
   date_idea: string
 }
 
+export interface PhaseEducation {
+  headline: string
+  body: string
+}
+
 export interface PhaseData {
   name: string
   days: string
@@ -35,6 +40,7 @@ export interface PhaseData {
   exercise: PhaseExercise
   mood: PhaseMood
   partner: PhasePartner
+  education: PhaseEducation
 }
 
 type PhasesJson = { phases: Record<Phase, PhaseData> }

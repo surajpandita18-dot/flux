@@ -1,5 +1,6 @@
 import type { PhaseResult } from '@/lib/phaseEngine'
 import type { PhaseData } from '@/lib/phases'
+import EducationAccordion from './EducationAccordion'
 
 const phaseStyles = {
   menstrual:  { dot: 'bg-menstrual',  label: 'text-menstrual',  card: 'bg-menstrual-soft  dark:bg-menstrual-soft-dark'  },
@@ -86,6 +87,13 @@ export default function PhaseCard({ displayName, phaseResult, phaseData }: Props
           {phaseData.mood.tip_card}
         </p>
       </div>
+
+      {/* Why you feel this way — expandable */}
+      <EducationAccordion
+        headline={phaseData.education.headline}
+        body={phaseData.education.body}
+        cardClass={styles.card}
+      />
 
     </div>
   )

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Phase } from '@/lib/phaseEngine'
+import affirmations from '../../../content/affirmations.json'
 
 const ENERGY_OPTIONS = [
   { value: 'low',    label: 'Low',    emoji: '🪫' },
@@ -74,12 +75,13 @@ type MoodValue   = 'tender' | 'grounded' | 'clear' | 'expansive' | 'scattered' |
 
 export default function DailyLogForm({ userId, phase, todayIso }: Props) {
   const router = useRouter()
-  const [energy,   setEnergy]   = useState<EnergyValue | null>(null)
-  const [mood,     setMood]     = useState<MoodValue | null>(null)
-  const [symptoms, setSymptoms] = useState<Set<string>>(new Set())
-  const [loading,  setLoading]  = useState(false)
-  const [error,    setError]    = useState<string | null>(null)
-  const [saved,    setSaved]    = useState(false)
+  const [energy,      setEnergy]      = useState<EnergyValue | null>(null)
+  const [mood,        setMood]        = useState<MoodValue | null>(null)
+  const [symptoms,    setSymptoms]    = useState<Set<string>>(new Set())
+  const [loading,     setLoading]     = useState(false)
+  const [error,       setError]       = useState<string | null>(null)
+  const [saved,       setSaved]       = useState(false)
+  const [affirmation, setAffirmation] = useState('')
 
   const accent = phaseAccent[phase]
   const ring   = phaseRing[phase]
@@ -113,25 +115,30 @@ export default function DailyLogForm({ userId, phase, todayIso }: Props) {
       return
     }
 
+    const pool = affirmations[phase]
+    setAffirmation(pool[Math.floor(Math.random() * pool.length)] ?? '')
     setSaved(true)
     setTimeout(() => {
       router.push('/')
       router.refresh()
-    }, 2000)
+    }, 2500)
   }
 
   const canSubmit = energy !== null && mood !== null && !loading
 
   if (saved) {
     return (
-      <div className="max-w-sm mx-auto w-full pt-16 pb-10 px-4 flex flex-col items-center gap-4">
+      <div className="max-w-sm mx-auto w-full pt-16 pb-10 px-4 flex flex-col items-center gap-5">
         <div className={`w-16 h-16 rounded-full flex items-center justify-center ${phaseSoft[phase]}`}>
           <span className="text-2xl">✓</span>
         </div>
-        <p className={`text-base font-semibold text-center ${phaseLabel[phase]}`}>
+        <p className={`text-xl font-bold text-center ${phaseLabel[phase]}`}>
+          {affirmation}
+        </p>
+        <p className="text-sm text-gray-400 text-center">
           {POST_LOG_MESSAGES[phase]}
         </p>
-        <p className="text-xs text-gray-400 text-center">Taking you home…</p>
+        <p className="text-xs text-gray-300 dark:text-gray-600 text-center">Taking you home…</p>
       </div>
     )
   }

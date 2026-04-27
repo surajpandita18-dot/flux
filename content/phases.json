@@ -44,6 +44,10 @@
         "expect": "Low energy, a pull toward quiet and solitude, maybe some irritability or sadness — this is your most inward phase and it's completely normal.",
         "tip_card": "If you want to cancel plans and stay in bed with a hot water bottle, that's not drama — that's your body asking for what it needs. Listen to it."
       },
+      "education": {
+        "headline": "Why you feel this way",
+        "body": "Estrogen and progesterone both drop sharply just before your period starts, which is what triggers the bleed — and the crash in energy, mood, and motivation that comes with it. Prostaglandins (hormone-like compounds) cause the uterus to contract, which is where cramping comes from. This is your body completing a full cycle, not failing you — the fatigue is the cost of that work."
+      },
       "partner": {
         "phase_summary": "She's in her rest phase — her body needs warmth, low-key energy, and zero pressure right now.",
         "do": [
@@ -105,6 +109,10 @@
         "expect": "Rising energy, sharper focus, creative ideas flowing, more social — you might feel like a newer, lighter version of yourself after the menstrual phase.",
         "tip_card": "That urge to plan, create, and connect? Lean into it. This is your brain at one of its most receptive — great week to tackle anything that needs fresh thinking."
       },
+      "education": {
+        "headline": "Why you feel this way",
+        "body": "Estrogen is climbing steadily this phase, and with it comes a rise in dopamine and serotonin — which is why your mood, focus, and motivation all tend to lift. Your body is preparing for ovulation by maturing a follicle, and the hormonal environment it creates genuinely sharpens cognition and social drive. The energy you feel right now is biological, not luck."
+      },
       "partner": {
         "phase_summary": "She's got rising energy and a social spark — great week to make plans and try something new together.",
         "do": [
@@ -160,6 +168,10 @@
       "mood": {
         "expect": "High confidence, magnetic energy, communication comes easily, more extroverted than usual — you might feel like you can take on the world, and honestly, kind of yes.",
         "tip_card": "You're at your most persuasive and socially magnetic right now — great week for a big presentation, an important conversation, or anything that needs you at full power."
+      },
+      "education": {
+        "headline": "Why you feel this way",
+        "body": "Estrogen peaks just before ovulation triggers a surge in luteinizing hormone (LH), which releases the egg — and briefly spikes testosterone too, which drives confidence, libido, and a sense of capability. Your verbal fluency, empathy, and pain tolerance are all measurably higher this week. This is not a coincidence; your body is biologically primed for connection and output right now."
       },
       "partner": {
         "phase_summary": "She's at her energetic and social peak this week — confident, magnetic, and ready for an adventure.",
@@ -221,6 +233,10 @@
       "mood": {
         "expect": "Emotional sensitivity, lower energy as the phase progresses, PMS possible in the second half (days 22-28) — everything feels a bit more, and that's real, not dramatic.",
         "tip_card": "If you're feeling more irritable, teary, or anxious than usual — that's the luteal phase, not you falling apart. Name it, give yourself more buffer, and ask for what you need."
+      },
+      "education": {
+        "headline": "Why you feel this way",
+        "body": "After ovulation, progesterone rises to prepare the uterine lining — and while it has a calming effect early in this phase, it also suppresses the estrogen-driven serotonin boost you had before. In the second half of the luteal phase, both hormones drop, which is what drives PMS symptoms: irritability, anxiety, fatigue, bloating, and emotional sensitivity that feels out of proportion. None of this is in your head — it is a measurable hormonal shift, and it passes."
       },
       "partner": {
         "phase_summary": "She may need extra patience and low-key energy this week — PMS is a real hormonal shift, not a mood she can just snap out of.",

@@ -1,15 +1,15 @@
+// Triggered by server at 9pm local — see /api/notify
 self.addEventListener('push', (event) => {
-  const data = event.data ? event.data.json() : {}
-  const title = data.title ?? 'Flux'
-  const body  = data.body  ?? 'How are you feeling today?'
+  const title = 'How are you feeling today?'
+  const body  = 'Take 10 seconds to log your energy and mood.'
 
   event.waitUntil(
     self.registration.showNotification(title, {
       body,
-      icon: '/icon-192.png',
-      badge: '/icon-192.png',
+      icon: '/favicon.ico',
+      badge: '/favicon.ico',
       tag: 'daily-log',
-      renotify: false,
+      renotify: true,
     }),
   )
 })
