@@ -1,0 +1,20 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js
+.next/
+out/
+build/
+
+# env — never commit real keys
+.env.local
+.env.*.local
+
+# OS
+.DS_Store
+Thumbs.db
+
+# debug
+npm-debug.log*

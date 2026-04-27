@@ -1,0 +1,243 @@
+{
+  "phases": {
+    "menstrual": {
+      "name": "Rest Mode",
+      "days": "1-5",
+      "emoji_color": "red",
+      "one_liner": "Your body's doing a lot right now — rest isn't laziness, it's literally what this phase is for.",
+      "nutrition": {
+        "focus": "Replenish what your body is losing — iron, warmth, and anti-inflammatory foods are your best friends right now.",
+        "foods": [
+          "lentils",
+          "spinach",
+          "beets",
+          "sweet potato",
+          "dark chocolate (70%+)",
+          "ginger tea",
+          "bone broth",
+          "pumpkin seeds",
+          "tofu"
+        ],
+        "avoid": [
+          "caffeine (worsens cramps and inflammation)",
+          "alcohol (depletes iron and tanks your mood)",
+          "cold or raw foods (warm, cooked meals are easier on your body right now)"
+        ],
+        "tip_card": "A simple dal with spinach does more for you this week than any supplement. Your body's literally working overtime — iron is your best friend right now."
+      },
+      "exercise": {
+        "recommended": [
+          "yin yoga",
+          "restorative yoga",
+          "slow walks",
+          "Pilates",
+          "gentle stretching"
+        ],
+        "avoid": [
+          "HIIT",
+          "heavy weightlifting",
+          "intense cardio"
+        ],
+        "tip_card": "Movement is medicine this week — but gentle movement. Even a 20-minute walk outside can shift your whole mood. You don't need to earn rest."
+      },
+      "mood": {
+        "expect": "Low energy, a pull toward quiet and solitude, maybe some irritability or sadness — this is your most inward phase and it's completely normal.",
+        "tip_card": "If you want to cancel plans and stay in bed with a hot water bottle, that's not drama — that's your body asking for what it needs. Listen to it."
+      },
+      "partner": {
+        "phase_summary": "She's in her rest phase — her body needs warmth, low-key energy, and zero pressure right now.",
+        "do": [
+          "Suggest cozy, low-effort plans (movie night, takeout at home)",
+          "Bring warmth — literally and figuratively (hot tea, a heating pad goes a long way)",
+          "Check in gently without expecting a lot of conversation",
+          "Handle logistics or errands without being asked"
+        ],
+        "avoid": [
+          "Big social events or crowded places",
+          "Heavy or confrontational conversations",
+          "Commenting on her energy level or mood",
+          "Expecting her to match your energy"
+        ],
+        "date_idea": "Cozy movie night at home — let her pick, order her favorite food, and just be present without an agenda."
+      }
+    },
+    "follicular": {
+      "name": "Build Mode",
+      "days": "6-13",
+      "emoji_color": "yellow",
+      "one_liner": "That rising energy you're feeling? It's real — your hormones are climbing and your brain is genuinely sharper right now.",
+      "nutrition": {
+        "focus": "Support rising estrogen with seeds, fermented foods, and fresh produce — your gut and hormones are closely linked this phase.",
+        "foods": [
+          "pumpkin seeds",
+          "flaxseeds",
+          "kimchi",
+          "sauerkraut",
+          "avocado",
+          "berries (all kinds)",
+          "leafy greens",
+          "eggs",
+          "lentils",
+          "chickpeas"
+        ],
+        "avoid": [
+          "excess processed sugar (disrupts the hormonal momentum you've got going)",
+          "ultra-processed snacks"
+        ],
+        "tip_card": "Pumpkin seeds and flaxseeds in your follicular phase aren't just trendy — they genuinely support the estrogen your body is building. Throw them in your smoothie, yogurt, or salad."
+      },
+      "exercise": {
+        "recommended": [
+          "strength training",
+          "hiking",
+          "cycling",
+          "dance classes",
+          "HIIT (energy is building — start testing it)",
+          "running",
+          "trying a new workout class"
+        ],
+        "avoid": [
+          "overtraining (energy is rising but you're not at peak yet — pace yourself)"
+        ],
+        "tip_card": "This is the best time to start something new or go a little harder than usual. Your body recovers faster and your motivation is higher — use it."
+      },
+      "mood": {
+        "expect": "Rising energy, sharper focus, creative ideas flowing, more social — you might feel like a newer, lighter version of yourself after the menstrual phase.",
+        "tip_card": "That urge to plan, create, and connect? Lean into it. This is your brain at one of its most receptive — great week to tackle anything that needs fresh thinking."
+      },
+      "partner": {
+        "phase_summary": "She's got rising energy and a social spark — great week to make plans and try something new together.",
+        "do": [
+          "Suggest plans and new experiences — she'll be up for them",
+          "Make reservations, plan a weekend trip, float an idea",
+          "Match her energy and be present and engaged",
+          "This is a great week for deeper conversations — she's open and connected"
+        ],
+        "avoid": [
+          "Being passive or disengaged — she's in social mode and wants connection"
+        ],
+        "date_idea": "Try a restaurant you've both been meaning to visit or sign up for an activity together (a class, a day hike, a market run) — she's curious and up for it."
+      }
+    },
+    "ovulation": {
+      "name": "Peak Mode",
+      "days": "14-17",
+      "emoji_color": "orange",
+      "one_liner": "This is your superpower window — you're at your most energetic, magnetic, and clear-headed all month.",
+      "nutrition": {
+        "focus": "Help your body process peak estrogen efficiently — cruciferous vegetables and anti-inflammatory foods are key this phase.",
+        "foods": [
+          "broccoli",
+          "cauliflower",
+          "Brussels sprouts",
+          "cabbage",
+          "berries",
+          "salmon",
+          "quinoa",
+          "watermelon",
+          "cucumber",
+          "leafy greens",
+          "turmeric"
+        ],
+        "avoid": [
+          "excess alcohol (disrupts hormone balance at your hormonal peak)",
+          "refined sugar and processed foods"
+        ],
+        "tip_card": "Cruciferous veg (broccoli, cauliflower, cabbage) are the unsung heroes of ovulation week — they help your liver clear excess estrogen so you feel good instead of bloated and wired."
+      },
+      "exercise": {
+        "recommended": [
+          "HIIT",
+          "running",
+          "group fitness classes",
+          "heavy lifting",
+          "competitive sports",
+          "any peak performance activity"
+        ],
+        "avoid": [],
+        "tip_card": "If you've been building toward a fitness goal — a PR, a new class, a longer run — this is your week. Your pain tolerance is higher and your performance is at its monthly peak."
+      },
+      "mood": {
+        "expect": "High confidence, magnetic energy, communication comes easily, more extroverted than usual — you might feel like you can take on the world, and honestly, kind of yes.",
+        "tip_card": "You're at your most persuasive and socially magnetic right now — great week for a big presentation, an important conversation, or anything that needs you at full power."
+      },
+      "partner": {
+        "phase_summary": "She's at her energetic and social peak this week — confident, magnetic, and ready for an adventure.",
+        "do": [
+          "Plan something exciting or spontaneous",
+          "Compliment her genuinely — she's radiating and she knows it",
+          "Say yes to her ideas and energy",
+          "Make an effort — she'll notice and appreciate it"
+        ],
+        "avoid": [
+          "Cancelling plans last minute — this is when she most wants to be out in the world",
+          "Low-effort evenings when she's clearly in peak energy mode"
+        ],
+        "date_idea": "An adventure date — a hike with a view, a concert, exploring a new neighborhood, or anything with a little spontaneity. Match her peak energy."
+      }
+    },
+    "luteal": {
+      "name": "Protect Mode",
+      "days": "18-28",
+      "emoji_color": "purple",
+      "one_liner": "Your body is winding down and asking for kindness — the slower pace is intentional, not a setback.",
+      "nutrition": {
+        "focus": "Stabilize mood and energy with magnesium-rich foods and complex carbs — your serotonin naturally dips this phase and food can genuinely help.",
+        "foods": [
+          "dark chocolate (70%+)",
+          "pumpkin seeds",
+          "bananas",
+          "oats",
+          "quinoa",
+          "lentils",
+          "sweet potato",
+          "chamomile tea",
+          "leafy greens",
+          "chickpeas",
+          "walnuts"
+        ],
+        "avoid": [
+          "caffeine (amplifies PMS anxiety and irritability — even if it feels necessary)",
+          "excess salt (worsens bloating)",
+          "alcohol (significantly worsens mood swings and sleep)"
+        ],
+        "tip_card": "Dark chocolate and pumpkin seeds together are your luteal phase secret weapon — magnesium genuinely helps with the mood dip and the cravings. Have them without guilt."
+      },
+      "exercise": {
+        "recommended": [
+          "walking (even 15 minutes counts)",
+          "yoga",
+          "Pilates",
+          "swimming",
+          "light cycling",
+          "anything that genuinely feels good to you"
+        ],
+        "avoid": [
+          "forcing HIIT or intense workouts if your body isn't feeling it",
+          "punishing yourself for lower performance — your body is in a different gear"
+        ],
+        "tip_card": "Move because it genuinely feels good, not because you think you should. Even a slow walk outside changes your mood more than you'd expect — but only if you don't force it."
+      },
+      "mood": {
+        "expect": "Emotional sensitivity, lower energy as the phase progresses, PMS possible in the second half (days 22-28) — everything feels a bit more, and that's real, not dramatic.",
+        "tip_card": "If you're feeling more irritable, teary, or anxious than usual — that's the luteal phase, not you falling apart. Name it, give yourself more buffer, and ask for what you need."
+      },
+      "partner": {
+        "phase_summary": "She may need extra patience and low-key energy this week — PMS is a real hormonal shift, not a mood she can just snap out of.",
+        "do": [
+          "Lead with patience, especially in the second half of the week",
+          "Handle logistics without being asked — it's the most loving thing you can do",
+          "Check in with 'what do you need?' instead of assuming",
+          "Keep plans low-pressure and easy to cancel if she's not up to it"
+        ],
+        "avoid": [
+          "Big confrontational or emotionally heavy conversations — wait for a better week",
+          "Commenting on her mood or telling her to cheer up",
+          "Making her feel like she's being dramatic or difficult",
+          "Piling on social commitments"
+        ],
+        "date_idea": "Her favorite low-key dinner — either cooking something comforting at home or her go-to local restaurant. Comfort and familiarity over novelty this week."
+      }
+    }
+  }
+}

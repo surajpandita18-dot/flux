@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flux — User Flow Mockups</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", system-ui, sans-serif;
+    background: #0f0f0f;
+    color: #fff;
+    padding: 40px 24px 80px;
+  }
+
+  h1 { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: #666; margin-bottom: 8px; }
+  .subtitle { font-size: 24px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .legend { font-size: 13px; color: #555; margin-bottom: 48px; }
+
+  /* Flow row */
+  .flow-section { margin-bottom: 64px; }
+  .flow-label {
+    font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    color: #444; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+  }
+  .flow-label::after { content: ''; flex: 1; height: 1px; background: #222; }
+
+  .screens { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+
+  /* Phone frame */
+  .phone {
+    width: 375px;
+    border-radius: 40px;
+    border: 2px solid #2a2a2a;
+    background: #fff;
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: 0 32px 80px rgba(0,0,0,.6);
+  }
+  .phone.dark { background: #030712; }
+
+  /* Status bar */
+  .status-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 24px 8px;
+    font-size: 12px; font-weight: 600;
+    color: #111;
+  }
+  .phone.dark .status-bar { color: #f9fafb; }
+
+  /* Screen label */
+  .screen-label {
+    font-size: 11px; color: #555; margin-top: 10px;
+    text-align: center; font-weight: 500; letter-spacing: .04em;
+  }
+
+  /* Connector arrows */
+  .arrow {
+    align-self: center;
+    font-size: 22px; color: #333;
+    flex-shrink: 0;
+    margin-top: -20px;
+  }
+
+  /* ── Shared UI atoms ── */
+  .screen-body { padding: 24px 24px 32px; }
+
+  .tagline { font-size: 13px; color: #9ca3af; margin-top: 4px; margin-bottom: 40px; }
+  .app-title { font-size: 32px; font-weight: 800; color: #111; }
+  .phone.dark .app-title { color: #f9fafb; }
+  .phone.dark .tagline { color: #6b7280; }
+
+  .input-label { font-size: 13px; font-weight: 500; color: #374151; margin-bottom: 6px; display: block; }
+  .phone.dark .input-label { color: #d1d5db; }
+
+  .input-field {
+    width: 100%; height: 48px; border-radius: 14px;
+    border: 1.5px solid #e5e7eb; padding: 0 16px;
+    font-size: 16px; color: #111; background: #fff;
+    display: flex; align-items: center;
+  }
+  .phone.dark .input-field { background: #111827; border-color: #374151; color: #f9fafb; }
+  .input-field.placeholder { color: #9ca3af; }
+
+  .btn-primary {
+    width: 100%; height: 50px; border-radius: 14px;
+    background: #111; color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 600; margin-top: 16px;
+  }
+  .phone.dark .btn-primary { background: #f9fafb; color: #111; }
+
+  .micro-copy { font-size: 11px; color: #9ca3af; text-align: center; margin-top: 20px; line-height: 1.6; }
+
+  /* Form spacing */
+  .form-group { margin-bottom: 20px; }
+
+  /* ── Phase card ── */
+  .hey { font-size: 13px; color: #9ca3af; margin-bottom: 12px; padding: 0 4px; }
+  .phone.dark .hey { color: #6b7280; }
+
+  .phase-card {
+    border-radius: 20px; padding: 20px;
+    margin-bottom: 10px;
+  }
+  .phase-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .phase-badge { display: flex; align-items: center; gap: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .phase-name { font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+  .day-counter { font-size: 12px; color: #9ca3af; }
+  .phase-oneliner { font-size: 15px; line-height: 1.55; color: #1f2937; }
+  .phone.dark .phase-oneliner { color: #f3f4f6; }
+
+  .section-label { font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #9ca3af; margin-bottom: 8px; }
+  .tip-text { font-size: 14px; line-height: 1.6; color: #374151; }
+  .phone.dark .tip-text { color: #e5e7eb; }
+
+  /* Phase color themes */
+  .menstrual-card { background: #FED7D7; }
+  .follicular-card { background: #FEFCBF; }
+  .ovulation-card { background: #FEEBC8; }
+  .luteal-card { background: #E9D8FD; }
+
+  .phone.dark .menstrual-card { background: #4A1717; }
+  .phone.dark .follicular-card { background: #44370A; }
+  .phone.dark .ovulation-card { background: #4A2508; }
+  .phone.dark .luteal-card { background: #2D1A5E; }
+
+  .dot-menstrual { background: #E53E3E; }
+  .dot-follicular { background: #D69E2E; }
+  .dot-ovulation { background: #DD6B20; }
+  .dot-luteal { background: #6B46C1; }
+
+  .text-menstrual { color: #E53E3E; }
+  .text-follicular { color: #D69E2E; }
+  .text-ovulation { color: #DD6B20; }
+  .text-luteal { color: #6B46C1; }
+
+  /* Log CTA */
+  .log-cta {
+    width: 100%; height: 52px; border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600;
+    background: #111; color: #fff; margin-top: 4px;
+  }
+  .log-cta.done { background: #f3f4f6; color: #9ca3af; }
+  .phone.dark .log-cta { background: #f9fafb; color: #111; }
+  .phone.dark .log-cta.done { background: #1f2937; color: #6b7280; }
+
+  /* ── Daily log ── */
+  .log-title { font-size: 20px; font-weight: 700; color: #111; margin-bottom: 4px; }
+  .phone.dark .log-title { color: #f9fafb; }
+  .log-sub { font-size: 13px; color: #9ca3af; }
+
+  .tap-section { margin-top: 28px; }
+  .tap-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
+  .tap-btn {
+    height: 64px; border-radius: 16px; border: 2px solid #e5e7eb;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; font-size: 11px; font-weight: 600; color: #4b5563;
+    background: #fff;
+  }
+  .phone.dark .tap-btn { border-color: #374151; color: #d1d5db; background: #111827; }
+  .tap-btn.selected-menstrual { background: #E53E3E; color: #fff; border-color: transparent; }
+  .tap-btn.selected-luteal    { background: #6B46C1; color: #fff; border-color: transparent; }
+  .tap-emoji { font-size: 22px; }
+
+  /* Symptoms */
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .chip {
+    height: 34px; padding: 0 12px; border-radius: 100px;
+    border: 1.5px solid #e5e7eb; font-size: 12px; color: #4b5563;
+    display: flex; align-items: center; background: #fff;
+  }
+  .phone.dark .chip { border-color: #374151; color: #d1d5db; background: #111827; }
+  .chip.selected { background: #6B46C1; color: #fff; border-color: transparent; }
+
+  /* Onboarding */
+  .ob-title { font-size: 24px; font-weight: 700; color: #111; margin-bottom: 4px; }
+  .ob-sub { font-size: 13px; color: #9ca3af; margin-bottom: 32px; }
+  .phone.dark .ob-title { color: #f9fafb; }
+
+  .cycle-row { display: flex; align-items: center; gap: 12px; }
+  .cycle-input {
+    width: 80px; height: 48px; border-radius: 14px;
+    border: 1.5px solid #e5e7eb; font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    color: #111; font-weight: 600;
+  }
+  .phone.dark .cycle-input { background: #111827; border-color: #374151; color: #f9fafb; }
+  .cycle-hint { font-size: 12px; color: #9ca3af; }
+
+  /* Email sent */
+  .email-icon {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: #f3f4f6; display: flex; align-items: center; justify-content: center;
+    font-size: 26px; margin: 0 auto 20px;
+  }
+  .phone.dark .email-icon { background: #1f2937; }
+  .email-sent-title { font-size: 20px; font-weight: 700; color: #111; text-align: center; margin-bottom: 8px; }
+  .phone.dark .email-sent-title { color: #f9fafb; }
+  .email-sent-body { font-size: 13px; color: #6b7280; text-align: center; line-height: 1.65; }
+  .email-highlight { font-weight: 600; color: #374151; }
+  .phone.dark .email-highlight { color: #e5e7eb; }
+
+  /* Already logged */
+  .logged-card { background: #f9fafb; border-radius: 20px; padding: 20px; }
+  .phone.dark .logged-card { background: #111827; }
+  .logged-row { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; }
+  .logged-key { color: #9ca3af; }
+  .logged-val { font-weight: 500; color: #111; }
+  .phone.dark .logged-val { color: #f9fafb; }
+  .back-link { font-size: 12px; color: #9ca3af; text-align: center; text-decoration: underline; margin-top: 20px; }
+
+  /* Anomaly banner */
+  .anomaly-banner {
+    background: #FEF3C7; border-radius: 14px; padding: 12px 14px;
+    font-size: 12px; color: #92400E; line-height: 1.55; margin-bottom: 10px;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+  .phone.dark .anomaly-banner { background: #451A03; color: #FCD34D; }
+
+  /* Period log modal preview */
+  .log-period-sheet {
+    background: #fff; border-radius: 24px 24px 0 0;
+    padding: 24px; border-top: 1px solid #f3f4f6;
+  }
+  .phone.dark .log-period-sheet { background: #111827; border-top-color: #1f2937; }
+  .sheet-handle { width: 40px; height: 4px; border-radius: 4px; background: #e5e7eb; margin: 0 auto 20px; }
+  .phone.dark .sheet-handle { background: #374151; }
+  .sheet-title { font-size: 17px; font-weight: 700; color: #111; margin-bottom: 4px; }
+  .phone.dark .sheet-title { color: #f9fafb; }
+  .sheet-sub { font-size: 12px; color: #9ca3af; margin-bottom: 20px; }
+  .flow-options { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 20px; }
+  .flow-btn {
+    height: 56px; border-radius: 14px; border: 1.5px solid #e5e7eb;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px; font-size: 11px; font-weight: 600; color: #4b5563;
+  }
+  .phone.dark .flow-btn { border-color: #374151; color: #d1d5db; }
+  .flow-btn.selected { background: #E53E3E; color: #fff; border-color: transparent; }
+  .flow-dot { width: 10px; height: 10px; border-radius: 50%; margin-bottom: 2px; }
+
+  /* Phase phase variant labels */
+  .variant-tag {
+    font-size: 11px; font-weight: 600; letter-spacing: .06em;
+    background: #1f1f1f; color: #666; border-radius: 6px;
+    padding: 3px 8px; text-align: center; margin-top: 8px;
+  }
+
+  /* Scrollable phone body */
+  .phone-scroll { overflow: hidden; }
+</style>
+</head>
+<body>
+
+<h1>Flux</h1>
+<div class="subtitle">User Flow — All Screens</div>
+<div class="legend">Scroll through all screens in order. Each screen = one moment in the journey.</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 1: AUTH FLOW                       -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="flow-section">
+  <div class="flow-label">1 — Auth flow (new user arrives)</div>
+  <div class="screens">
+
+    <!-- Sign in -->
+    <div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="app-title">Flux</div>
+          <div class="tagline">Your cycle, understood.</div>
+
+          <div class="form-group">
+            <label class="input-label">Email address</label>
+            <div class="input-field placeholder">you@example.com</div>
+          </div>
+
+          <div class="btn-primary">Send magic link</div>
+
+          <div class="micro-copy">We'll email you a one-click sign-in link.<br>No password. No spam.</div>
+        </div>
+      </div>
+      <div class="screen-label">① Sign in</div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Email sent -->
+    <div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body" style="display:flex;flex-direction:column;justify-content:center;min-height:520px;">
+          <div class="email-icon">✉️</div>
+          <div class="email-sent-title">Check your email</div>
+          <div class="email-sent-body">
+            We sent a magic link to<br>
+            <span class="email-highlight">suraj@example.com</span>.<br><br>
+            Click it to sign in —<br>no password needed.
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">② Magic link sent</div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Auto redirect note -->
+    <div>
+      <div class="phone" style="background:#030712;">
+        <div class="status-bar" style="color:#9ca3af;"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body" style="display:flex;flex-direction:column;justify-content:center;min-height:520px;text-align:center;">
+          <div style="font-size:32px;margin-bottom:16px;">🔐</div>
+          <div style="font-size:15px;font-weight:600;color:#f9fafb;margin-bottom:8px;">Verifying…</div>
+          <div style="font-size:12px;color:#6b7280;">User clicks link in email<br>→ /auth/callback exchanges code<br>→ redirects to onboarding</div>
+        </div>
+      </div>
+      <div class="screen-label">③ Auth callback (auto)</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 2: ONBOARDING                      -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="flow-section">
+  <div class="flow-label">2 — Onboarding (first time only)</div>
+  <div class="screens">
+
+    <div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="ob-title">Let's set up Flux</div>
+          <div class="ob-sub">Takes 30 seconds. Just the basics.</div>
+
+          <div class="form-group">
+            <label class="input-label">What should we call you?</label>
+            <div class="input-field">Priya</div>
+          </div>
+
+          <div class="form-group">
+            <label class="input-label">When did your last period start?</label>
+            <div class="input-field">April 14, 2026</div>
+          </div>
+
+          <div class="form-group">
+            <label class="input-label">How long is your usual cycle?</label>
+            <div class="cycle-row">
+              <div class="cycle-input">28</div>
+              <div class="cycle-hint">days (most people: 26–32)</div>
+            </div>
+          </div>
+
+          <div class="btn-primary">Start tracking</div>
+        </div>
+      </div>
+      <div class="screen-label">④ Onboarding form</div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Home (first arrive) -->
+    <div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="hey">Hey, Priya</div>
+
+          <div class="phase-card follicular-card">
+            <div class="phase-header">
+              <div class="phase-badge">
+                <div class="dot dot-follicular"></div>
+                <div class="phase-name text-follicular">Build Mode</div>
+              </div>
+              <div class="day-counter">Day 13 / 28</div>
+            </div>
+            <div class="phase-oneliner">That rising energy you're feeling? It's real — your hormones are climbing and your brain is genuinely sharper right now.</div>
+          </div>
+
+          <div class="phase-card follicular-card">
+            <div class="section-label">Nutrition today</div>
+            <div class="tip-text">Pumpkin seeds and flax in your smoothie this week — they support the estrogen your body is building.</div>
+          </div>
+
+          <div class="phase-card follicular-card">
+            <div class="section-label">Movement</div>
+            <div class="tip-text">Best time to try something new. Your body recovers faster — use it.</div>
+          </div>
+
+          <div class="log-cta">Log how you feel</div>
+        </div>
+      </div>
+      <div class="screen-label">⑤ Home — first view</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 3: HOME — ALL 4 PHASE VARIANTS     -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="flow-section">
+  <div class="flow-label">3 — Home screen — all 4 phase variants</div>
+  <div class="screens">
+
+    <!-- Menstrual -->
+    <div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="hey">Hey, Priya</div>
+          <div class="phase-card menstrual-card">
+            <div class="phase-header">
+              <div class="phase-badge">
+                <div class="dot dot-menstrual"></div>
+                <div class="phase-name text-menstrual">Rest Mode</div>
+              </div>
+              <div class="day-counter">Day 2 / 28</div>
+            </div>
+            <div class="phase-oneliner">Your body's doing a lot right now — rest isn't laziness, it's literally what this phase is for.</div>
+            <div style="margin-top:12px;font-size:11px;color:#9ca3af;">Period in 26 days</div>
+          </div>
+          <div class="phase-card menstrual-card">
+            <div class="section-label">Nutrition today</div>
+            <div class="tip-text">A simple dal with spinach does more for you this week than any supplement. Iron is your best friend right now.</div>
+          </div>
+          <div class="phase-card menstrual-card">
+            <div class="section-label">Movement</div>
+            <div class="tip-text">Even a 20-minute walk outside can shift your whole mood. You don't need to earn rest.</div>
+          </div>
+          <div class="phase-card menstrual-card">
+            <div class="section-label">What to expect</div>
+            <div class="tip-text">If you want to cancel plans and stay in bed with a hot water bottle — that's your body asking for what it needs.</div>
+          </div>
+          <div class="log-cta">Log how you feel</div>
+        </div>
+      </div>
+      <div class="variant-tag">Menstrual • Days 1–5</div>
+    </div>
+
+    <!-- Follicular -->
+    <div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="hey">Hey, Priya</div>
+          <div class="phase-card follicular-card">
+            <div class="phase-header">
+              <div class="phase-badge">
+                <div class="dot dot-follicular"></div>
+                <div class="phase-name text-follicular">Build Mode</div>
+              </div>
+              <div class="day-counter">Day 8 / 28</div>
+            </div>
+            <div class="phase-oneliner">That rising energy you're feeling? It's real — your hormones are climbing and your brain is genuinely sharper right now.</div>
+          </div>
+          <div class="phase-card follicular-card">
+            <div class="section-label">Nutrition today</div>
+            <div class="tip-text">Pumpkin seeds + flax in your smoothie. They support the estrogen your body is building.</div>
+          </div>
+          <div class="phase-card follicular-card">
+            <div class="section-label">Movement</div>
+            <div class="tip-text">Best time to start something new or push harder. Your body recovers faster this week.</div>
+          </div>
+          <div class="phase-card follicular-card">
+            <div class="section-label">What to expect</div>
+            <div class="tip-text">That urge to plan, create, and connect? Lean into it — great week for fresh thinking.</div>
+          </div>
+          <div class="log-cta">Log how you feel</div>
+        </div>
+      </div>
+      <div class="variant-tag">Follicular • Days 6–13</div>
+    </div>
+
+    <!-- Ovulation -->
+    <div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="hey">Hey, Priya</div>
+          <div class="phase-card ovulation-card">
+            <div class="phase-header">
+              <div class="phase-badge">
+                <div class="dot dot-ovulation"></div>
+                <div class="phase-name text-ovulation">Peak Mode</div>
+              </div>
+              <div class="day-counter">Day 14 / 28</div>
+            </div>
+            <div class="phase-oneliner">This is your superpower window — you're at your most energetic, magnetic, and clear-headed all month.</div>
+          </div>
+          <div class="phase-card ovulation-card">
+            <div class="section-label">Nutrition today</div>
+            <div class="tip-text">Cruciferous veg (broccoli, cauliflower) help your liver clear excess estrogen so you feel good instead of bloated.</div>
+          </div>
+          <div class="phase-card ovulation-card">
+            <div class="section-label">Movement</div>
+            <div class="tip-text">If you've been building toward a fitness goal — this is your week. Pain tolerance is higher, performance is at peak.</div>
+          </div>
+          <div class="phase-card ovulation-card">
+            <div class="section-label">What to expect</div>
+            <div class="tip-text">Great week for a big presentation or an important conversation — you're at your most persuasive.</div>
+          </div>
+          <div class="log-cta">Log how you feel</div>
+        </div>
+      </div>
+      <div class="variant-tag">Ovulation • Days 14–17</div>
+    </div>
+
+    <!-- Luteal -->
+    <div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="hey">Hey, Priya</div>
+          <div class="phase-card luteal-card">
+            <div class="phase-header">
+              <div class="phase-badge">
+                <div class="dot dot-luteal"></div>
+                <div class="phase-name text-luteal">Protect Mode</div>
+              </div>
+              <div class="day-counter">Day 22 / 28</div>
+            </div>
+            <div class="phase-oneliner">Your body is winding down and asking for kindness — the slower pace is intentional, not a setback.</div>
+            <div style="margin-top:12px;font-size:11px;color:#9ca3af;">Period in 6 days</div>
+          </div>
+          <div class="phase-card luteal-card">
+            <div class="section-label">Nutrition today</div>
+            <div class="tip-text">Dark chocolate + pumpkin seeds = magnesium. It genuinely helps with the mood dip. Have them without guilt.</div>
+          </div>
+          <div class="phase-card luteal-card">
+            <div class="section-label">Movement</div>
+            <div class="tip-text">Move because it feels good, not because you think you should. Even a slow walk changes your mood.</div>
+          </div>
+          <div class="phase-card luteal-card">
+            <div class="section-label">What to expect</div>
+            <div class="tip-text">If you're feeling more irritable or anxious — that's the luteal phase, not you falling apart.</div>
+          </div>
+          <div class="log-cta">Log how you feel</div>
+        </div>
+      </div>
+      <div class="variant-tag">Luteal • Days 18–28</div>
+    </div>
+
+    <!-- Already logged -->
+    <div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="hey">Hey, Priya</div>
+          <div class="phase-card luteal-card">
+            <div class="phase-header">
+              <div class="phase-badge">
+                <div class="dot dot-luteal"></div>
+                <div class="phase-name text-luteal">Protect Mode</div>
+              </div>
+              <div class="day-counter">Day 22 / 28</div>
+            </div>
+            <div class="phase-oneliner">Your body is winding down and asking for kindness — the slower pace is intentional, not a setback.</div>
+          </div>
+          <div class="phase-card luteal-card">
+            <div class="section-label">Nutrition today</div>
+            <div class="tip-text">Dark chocolate + pumpkin seeds = magnesium. Have them without guilt.</div>
+          </div>
+          <div class="phase-card luteal-card">
+            <div class="section-label">Movement</div>
+            <div class="tip-text">Move because it feels good, not because you think you should.</div>
+          </div>
+          <div class="log-cta done">Logged today ✓</div>
+        </div>
+      </div>
+      <div class="variant-tag">After logging — CTA state</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 4: DAILY LOG FLOW                  -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="flow-section">
+  <div class="flow-label">4 — Daily log ("Log how you feel" → form → summary)</div>
+  <div class="screens">
+
+    <!-- Log form -->
+    <div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="log-title">How are you today?</div>
+          <div class="log-sub">Tap to log — takes 10 seconds.</div>
+
+          <div class="tap-section">
+            <div class="section-label">Energy</div>
+            <div class="tap-grid">
+              <div class="tap-btn">
+                <div class="tap-emoji">🪫</div>
+                <span>Low</span>
+              </div>
+              <div class="tap-btn">
+                <div class="tap-emoji">🔋</div>
+                <span>Okay</span>
+              </div>
+              <div class="tap-btn selected-luteal">
+                <div class="tap-emoji">⚡</div>
+                <span>Great</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tap-section">
+            <div class="section-label">Mood</div>
+            <div class="tap-grid">
+              <div class="tap-btn">
+                <div class="tap-emoji">😞</div>
+                <span>Off</span>
+              </div>
+              <div class="tap-btn selected-luteal">
+                <div class="tap-emoji">😐</div>
+                <span>Okay</span>
+              </div>
+              <div class="tap-btn">
+                <div class="tap-emoji">😊</div>
+                <span>Good</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tap-section">
+            <div class="section-label">Symptoms <span style="text-transform:none;font-weight:400;">(optional)</span></div>
+            <div class="chips">
+              <div class="chip selected">Cramps</div>
+              <div class="chip">Bloating</div>
+              <div class="chip">Headache</div>
+              <div class="chip selected">Fatigue</div>
+              <div class="chip">Mood swings</div>
+              <div class="chip">Cravings</div>
+              <div class="chip">Backache</div>
+              <div class="chip">Brain fog</div>
+            </div>
+          </div>
+
+          <div class="btn-primary" style="margin-top:28px;">Save today's log</div>
+        </div>
+      </div>
+      <div class="screen-label">⑥ Daily log form</div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Already logged summary -->
+    <div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body" style="padding-top:40px;">
+          <div class="log-title" style="margin-bottom:16px;">Today's log ✓</div>
+          <div class="logged-card">
+            <div class="logged-row">
+              <span class="logged-key">Energy</span>
+              <span class="logged-val">Great</span>
+            </div>
+            <div class="logged-row">
+              <span class="logged-key">Mood</span>
+              <span class="logged-val">Okay</span>
+            </div>
+            <div class="logged-row" style="flex-direction:column;gap:4px;">
+              <span class="logged-key">Symptoms</span>
+              <span class="logged-val">Cramps, Fatigue</span>
+            </div>
+          </div>
+          <div class="back-link">← Back to home</div>
+        </div>
+      </div>
+      <div class="screen-label">⑦ Already logged — summary</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 5: MISSING SCREEN — LOG PERIOD     -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="flow-section">
+  <div class="flow-label">5 — ⚠️ Missing: "My period started" flow (not yet built)</div>
+  <div class="screens">
+
+    <!-- Home with period button -->
+    <div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="hey">Hey, Priya</div>
+          <div class="phase-card luteal-card">
+            <div class="phase-header">
+              <div class="phase-badge">
+                <div class="dot dot-luteal"></div>
+                <div class="phase-name text-luteal">Protect Mode</div>
+              </div>
+              <div class="day-counter">Day 26 / 28</div>
+            </div>
+            <div class="phase-oneliner">Your body is winding down and asking for kindness.</div>
+            <div style="margin-top:12px;font-size:11px;color:#9ca3af;">Period expected today</div>
+          </div>
+
+          <!-- Period started button - new -->
+          <div style="background:#FED7D7;border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+            <div>
+              <div style="font-size:13px;font-weight:600;color:#9B2C2C;">Period started?</div>
+              <div style="font-size:11px;color:#C53030;margin-top:2px;">Tap to log Day 1</div>
+            </div>
+            <div style="font-size:22px;">🩸</div>
+          </div>
+
+          <div class="phase-card luteal-card">
+            <div class="section-label">Nutrition today</div>
+            <div class="tip-text">Dark chocolate + pumpkin seeds. Magnesium helps the mood dip.</div>
+          </div>
+          <div class="log-cta">Log how you feel</div>
+        </div>
+      </div>
+      <div class="screen-label">⑧ Home — period expected (concept)</div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Period log sheet -->
+    <div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div style="padding:24px 24px 0;">
+          <div class="hey" style="margin-bottom:0;">Hey, Priya</div>
+          <div class="phase-card luteal-card" style="margin-top:12px;margin-bottom:0;">
+            <div class="phase-oneliner" style="font-size:13px;">Day 26 / 28 — Protect Mode</div>
+          </div>
+        </div>
+        <!-- Bottom sheet -->
+        <div class="log-period-sheet" style="margin-top:16px;">
+          <div class="sheet-handle"></div>
+          <div class="sheet-title">My period started</div>
+          <div class="sheet-sub">We'll reset your cycle to Day 1. How heavy is it?</div>
+
+          <div class="flow-options">
+            <div class="flow-btn">
+              <div class="flow-dot" style="background:#FEB2B2;"></div>
+              <span>Light</span>
+            </div>
+            <div class="flow-btn selected">
+              <div class="flow-dot" style="background:#FC8181;"></div>
+              <span>Medium</span>
+            </div>
+            <div class="flow-btn">
+              <div class="flow-dot" style="background:#E53E3E;"></div>
+              <span>Heavy</span>
+            </div>
+          </div>
+
+          <div class="btn-primary">Log Day 1</div>
+        </div>
+      </div>
+      <div class="screen-label">⑨ Log period — bottom sheet (concept)</div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Home reset to Day 1 -->
+    <div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="hey">Hey, Priya</div>
+          <div class="phase-card menstrual-card">
+            <div class="phase-header">
+              <div class="phase-badge">
+                <div class="dot dot-menstrual"></div>
+                <div class="phase-name text-menstrual">Rest Mode</div>
+              </div>
+              <div class="day-counter">Day 1 / 28</div>
+            </div>
+            <div class="phase-oneliner">Your body's doing a lot right now — rest isn't laziness, it's literally what this phase is for.</div>
+          </div>
+          <div class="phase-card menstrual-card">
+            <div class="section-label">Nutrition today</div>
+            <div class="tip-text">A simple dal with spinach does more for you than any supplement. Iron is your best friend right now.</div>
+          </div>
+          <div class="phase-card menstrual-card">
+            <div class="section-label">Movement</div>
+            <div class="tip-text">Even a 20-minute walk can shift your mood. You don't need to earn rest.</div>
+          </div>
+          <div class="log-cta">Log how you feel</div>
+        </div>
+      </div>
+      <div class="screen-label">⑩ Home — reset to Day 1</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 6: ANOMALY DETECTION               -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="flow-section">
+  <div class="flow-label">6 — Anomaly detection banner (Sprint 2 concept)</div>
+  <div class="screens">
+
+    <div>
+      <div class="phone">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="hey">Hey, Priya</div>
+
+          <!-- Anomaly banner -->
+          <div class="anomaly-banner">
+            <span>⚠️</span>
+            <div>
+              <strong>Your cycle looks shorter than usual.</strong><br>
+              Your last 3 cycles averaged 19 days. If this continues, consider speaking with a doctor.
+              <div style="margin-top:6px;font-size:11px;opacity:.7;">Tap to dismiss</div>
+            </div>
+          </div>
+
+          <div class="phase-card menstrual-card">
+            <div class="phase-header">
+              <div class="phase-badge">
+                <div class="dot dot-menstrual"></div>
+                <div class="phase-name text-menstrual">Rest Mode</div>
+              </div>
+              <div class="day-counter">Day 1 / 19</div>
+            </div>
+            <div class="phase-oneliner">Your body's doing a lot right now — rest isn't laziness, it's what this phase is for.</div>
+          </div>
+          <div class="phase-card menstrual-card">
+            <div class="section-label">Nutrition today</div>
+            <div class="tip-text">Iron is your best friend right now. Dal + spinach.</div>
+          </div>
+          <div class="log-cta">Log how you feel</div>
+        </div>
+      </div>
+      <div class="screen-label">⑪ Anomaly banner — short cycle</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION 7: DARK MODE VARIANTS              -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="flow-section">
+  <div class="flow-label">7 — Dark mode — key screens</div>
+  <div class="screens">
+
+    <!-- Auth dark -->
+    <div>
+      <div class="phone dark">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="app-title">Flux</div>
+          <div class="tagline">Your cycle, understood.</div>
+          <div class="form-group">
+            <label class="input-label">Email address</label>
+            <div class="input-field placeholder" style="background:#111827;border-color:#374151;color:#6b7280;">you@example.com</div>
+          </div>
+          <div class="btn-primary">Send magic link</div>
+          <div class="micro-copy">No password. No spam.</div>
+        </div>
+      </div>
+      <div class="screen-label">Auth — dark</div>
+    </div>
+
+    <!-- Home Menstrual dark -->
+    <div>
+      <div class="phone dark">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="hey">Hey, Priya</div>
+          <div class="phase-card menstrual-card">
+            <div class="phase-header">
+              <div class="phase-badge">
+                <div class="dot dot-menstrual"></div>
+                <div class="phase-name text-menstrual">Rest Mode</div>
+              </div>
+              <div class="day-counter">Day 2 / 28</div>
+            </div>
+            <div class="phase-oneliner">Your body's doing a lot right now — rest isn't laziness, it's what this phase is for.</div>
+          </div>
+          <div class="phase-card menstrual-card">
+            <div class="section-label">Nutrition today</div>
+            <div class="tip-text">Dal with spinach does more than any supplement. Iron is your best friend.</div>
+          </div>
+          <div class="phase-card menstrual-card">
+            <div class="section-label">Movement</div>
+            <div class="tip-text">Even a 20-minute walk can shift your mood. You don't need to earn rest.</div>
+          </div>
+          <div class="log-cta">Log how you feel</div>
+        </div>
+      </div>
+      <div class="screen-label">Home — dark / menstrual</div>
+    </div>
+
+    <!-- Home Luteal dark -->
+    <div>
+      <div class="phone dark">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="hey">Hey, Priya</div>
+          <div class="phase-card luteal-card">
+            <div class="phase-header">
+              <div class="phase-badge">
+                <div class="dot dot-luteal"></div>
+                <div class="phase-name text-luteal">Protect Mode</div>
+              </div>
+              <div class="day-counter">Day 22 / 28</div>
+            </div>
+            <div class="phase-oneliner">Your body is winding down and asking for kindness — the slower pace is intentional.</div>
+          </div>
+          <div class="phase-card luteal-card">
+            <div class="section-label">Nutrition today</div>
+            <div class="tip-text">Dark chocolate + pumpkin seeds. Magnesium genuinely helps the mood dip.</div>
+          </div>
+          <div class="phase-card luteal-card">
+            <div class="section-label">Movement</div>
+            <div class="tip-text">Move because it feels good, not because you think you should.</div>
+          </div>
+          <div class="log-cta done">Logged today ✓</div>
+        </div>
+      </div>
+      <div class="screen-label">Home — dark / luteal / logged</div>
+    </div>
+
+    <!-- Daily log dark -->
+    <div>
+      <div class="phone dark">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="screen-body">
+          <div class="log-title">How are you today?</div>
+          <div class="log-sub">Tap to log — takes 10 seconds.</div>
+
+          <div class="tap-section">
+            <div class="section-label">Energy</div>
+            <div class="tap-grid">
+              <div class="tap-btn">
+                <div class="tap-emoji">🪫</div><span>Low</span>
+              </div>
+              <div class="tap-btn selected-menstrual">
+                <div class="tap-emoji">🔋</div><span>Okay</span>
+              </div>
+              <div class="tap-btn">
+                <div class="tap-emoji">⚡</div><span>Great</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tap-section">
+            <div class="section-label">Mood</div>
+            <div class="tap-grid">
+              <div class="tap-btn selected-menstrual">
+                <div class="tap-emoji">😞</div><span>Off</span>
+              </div>
+              <div class="tap-btn">
+                <div class="tap-emoji">😐</div><span>Okay</span>
+              </div>
+              <div class="tap-btn">
+                <div class="tap-emoji">😊</div><span>Good</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tap-section">
+            <div class="section-label">Symptoms</div>
+            <div class="chips">
+              <div class="chip" style="background:#4A1717;color:#FC8181;border-color:transparent;">Cramps</div>
+              <div class="chip">Bloating</div>
+              <div class="chip" style="background:#4A1717;color:#FC8181;border-color:transparent;">Fatigue</div>
+              <div class="chip">Headache</div>
+            </div>
+          </div>
+
+          <div class="btn-primary" style="margin-top:24px;">Save today's log</div>
+        </div>
+      </div>
+      <div class="screen-label">Daily log — dark / menstrual</div>
+    </div>
+
+  </div>
+</div>
+
+<div style="border-top:1px solid #1f1f1f;margin-top:16px;padding-top:32px;font-size:12px;color:#444;line-height:1.7;">
+  <strong style="color:#666;">Flow summary:</strong><br>
+  New user: ① Sign in → ② Magic link → ③ Callback → ④ Onboarding → ⑤ Home<br>
+  Returning user: Auth check → Home (phase card + log CTA)<br>
+  Daily: Home → ⑥ Log form → ⑦ Summary → Home (CTA turns to "Logged today ✓")<br>
+  Period: ⑧ Period banner on home → ⑨ Log sheet → ⑩ Home resets to Day 1<br>
+  <br>
+  <strong style="color:#666;">Screens built:</strong> ①–⑦ ✅ &nbsp;&nbsp;
+  <strong style="color:#666;">Missing / Sprint 2:</strong> ⑧–⑩ (log period), ⑪ (anomaly), partner portal
+</div>
+
+</body>
+</html>
