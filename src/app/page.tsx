@@ -6,6 +6,7 @@ import { getPhaseData } from '@/lib/phases'
 import { detectCycleAnomalies } from '@/lib/anomalyDetection'
 import PhaseCard from '@/components/phase/PhaseCard'
 import AnomalyBanner from '@/components/anomaly/AnomalyBanner'
+import StartButton from '@/components/StartButton'
 import type { AnomalyFlag } from '@/components/anomaly/AnomalyBanner'
 import type { UserProfile, DailyLog } from '@/types/database'
 
@@ -16,7 +17,7 @@ export default async function HomePage() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user) redirect('/auth')
+  if (!user) return <StartButton />
 
   const { data } = await supabase
     .from('user_profiles')

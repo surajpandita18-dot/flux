@@ -40,15 +40,8 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const isPublic = PUBLIC_PATHS.some((p) =>
-    request.nextUrl.pathname.startsWith(p),
-  )
-
-  if (!user && !isPublic) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/auth'
-    return NextResponse.redirect(url)
-  }
+  // No redirect — anonymous sign-in handled on client
+  void user
 
   return supabaseResponse
 }
