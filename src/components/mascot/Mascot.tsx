@@ -12,10 +12,10 @@ const config: Record<Phase, {
   eyes: 'sleepy' | 'open' | 'sparkle' | 'gentle'
   mouth: 'flat' | 'small' | 'wide' | 'soft'
 }> = {
-  menstrual:  { body: '#FECDD3', ear: '#FDA4AF', accent: '#F43F5E', eyes: 'sleepy',  mouth: 'flat'  },
-  follicular: { body: '#FEF9C3', ear: '#FDE68A', accent: '#EAB308', eyes: 'open',    mouth: 'small' },
-  ovulation:  { body: '#FFEDD5', ear: '#FED7AA', accent: '#F97316', eyes: 'sparkle', mouth: 'wide'  },
-  luteal:     { body: '#EDE9FE', ear: '#DDD6FE', accent: '#8B5CF6', eyes: 'gentle',  mouth: 'soft'  },
+  menstrual:  { body: '#FECDD3', ear: '#F4A0B4', accent: '#E8627C', eyes: 'sleepy',  mouth: 'flat'  },
+  follicular: { body: '#BBF7D0', ear: '#8CCBA8', accent: '#3D9E6E', eyes: 'open',    mouth: 'small' },
+  ovulation:  { body: '#FEF9C3', ear: '#F5D07A', accent: '#C8960A', eyes: 'sparkle', mouth: 'wide'  },
+  luteal:     { body: '#DDD6FE', ear: '#A8C4E8', accent: '#4A80C8', eyes: 'gentle',  mouth: 'soft'  },
 }
 
 function Eyes({ type, accent }: { type: typeof config[Phase]['eyes']; accent: string }) {

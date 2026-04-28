@@ -4,29 +4,14 @@ import { createClient } from '@/lib/supabase/server'
 import { calculatePhase } from '@/lib/phaseEngine'
 import { getPhaseData } from '@/lib/phases'
 import { detectCycleAnomalies } from '@/lib/anomalyDetection'
-import type { Phase } from '@/lib/phaseEngine'
 import PhaseCard from '@/components/phase/PhaseCard'
+import PhaseRing from '@/components/phase/PhaseRing'
 import AnomalyBanner from '@/components/anomaly/AnomalyBanner'
 import CycleCalendar from '@/components/calendar/CycleCalendar'
-import Mascot from '@/components/mascot/Mascot'
 import BottomNav from '@/components/nav/BottomNav'
 import StartButton from '@/components/StartButton'
 import type { AnomalyFlag } from '@/components/anomaly/AnomalyBanner'
 import type { UserProfile, DailyLog } from '@/types/database'
-
-const phaseHeaderClass: Record<Phase, string> = {
-  menstrual:  'phase-header-menstrual',
-  follicular: 'phase-header-follicular',
-  ovulation:  'phase-header-ovulation',
-  luteal:     'phase-header-luteal',
-}
-
-const phaseColorClass: Record<Phase, string> = {
-  menstrual:  'text-menstrual',
-  follicular: 'text-follicular',
-  ovulation:  'text-ovulation',
-  luteal:     'text-luteal',
-}
 
 export default async function HomePage() {
   const supabase = createClient()
@@ -107,80 +92,68 @@ export default async function HomePage() {
   const dow        = new Date().toLocaleDateString('en-US', { weekday: 'long' })
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <div className="min-h-screen pb-28" style={{ backgroundColor: '#FBF8F5' }}>
+      <div className="max-w-sm mx-auto px-4 pt-12 space-y-3">
 
-      {/* ── Gradient header ──────────────────────── */}
-      <div className={`${phaseHeaderClass[phaseResult.phase]} relative`}>
-        <div className="max-w-sm mx-auto px-5 pt-14 pb-24">
-
-          {/* Greeting */}
-          <p className="text-white/60 text-[13px] font-semibold">
-            {dow} · Hey, {firstName}
-          </p>
-
-          {/* Phase name — hero moment */}
-          <h1 className="text-white text-[44px] font-black tracking-[-1.5px] leading-none mt-2">
-            {phaseData.name}
+        {/* ── Greeting ─────────────────────────────── */}
+        <div className="px-1 pb-1">
+          <h1 className="text-[28px] font-extrabold tracking-tight" style={{ color: '#1A1814' }}>
+            Hi, {firstName}
           </h1>
-
-          <p className="text-white/65 text-[13px] font-medium mt-2">
-            Day {phaseResult.dayNumber} of {phaseResult.totalDays}
+          <p className="text-[14px] mt-0.5" style={{ color: '#A8A4A0' }}>
+            How do you feel today?
           </p>
-
-          {/* Mascot — absolute right */}
-          <div className="absolute right-5 bottom-5">
-            <Mascot phase={phaseResult.phase} className="w-28 h-28" />
-          </div>
         </div>
-      </div>
 
-      {/* ── Content sheet ─────────────────────────── */}
-      <div className="relative -mt-10 rounded-t-[2rem] bg-gray-50 dark:bg-gray-950 min-h-[60vh] pb-36">
-        <div className="max-w-sm mx-auto px-4 pt-5 space-y-3">
+        {/* ── Anomaly banner ───────────────────────── */}
+        <AnomalyBanner flags={anomalyFlags} />
 
-          {/* Anomaly banner */}
-          <AnomalyBanner flags={anomalyFlags} />
+        {/* ── Phase ring — hero ────────────────────── */}
+        <PhaseRing phaseResult={phaseResult} />
 
-          {/* Phase card (stats + tips) */}
-          <PhaseCard phaseResult={phaseResult} phaseData={phaseData} />
+        {/* ── CTAs ─────────────────────────────────── */}
+        <div className="space-y-2">
+          <Link
+            href="/log"
+            className={`flex items-center justify-center w-full min-h-[54px] rounded-2xl font-bold text-[15px] transition-all active:scale-[0.98] ${
+              loggedToday
+                ? 'shadow-soft'
+                : 'shadow-card'
+            }`}
+            style={loggedToday
+              ? { backgroundColor: '#FFFFFF', color: '#A8A4A0' }
+              : { backgroundColor: '#1A1814', color: '#FFFFFF' }
+            }
+          >
+            {loggedToday ? 'Checked in today ✓' : 'Check in now'}
+          </Link>
 
-          {/* Calendar */}
-          <CycleCalendar
-            lastPeriodDate={new Date(lastPeriodDateStr)}
-            cycleLengthAvg={profile.cycle_length_avg}
-            phase={phaseResult.phase}
-          />
-
-          {/* Pattern teaser */}
-          {(logCount ?? 0) >= 7 && (logCount ?? 0) < 84 && (
-            <p className="text-center text-xs text-gray-400 dark:text-gray-600 py-1">
-              Keep logging — patterns appear after 3 cycles.
-            </p>
-          )}
-
-          {/* CTAs */}
-          <div className="space-y-2 pt-1">
-            <Link
-              href="/log"
-              className={`flex items-center justify-center w-full min-h-[54px] rounded-2xl font-bold text-[15px] transition-all active:scale-[0.98] ${
-                loggedToday
-                  ? 'bg-white dark:bg-gray-900 text-gray-400 dark:text-gray-500 shadow-soft'
-                  : 'bg-gray-950 dark:bg-white text-white dark:text-gray-900 shadow-lift'
-              }`}
-            >
-              {loggedToday ? 'Checked in today ✓' : 'Check in now'}
-            </Link>
-
-            <Link
-              href="/period"
-              className={`flex items-center justify-center gap-2 w-full min-h-[48px] rounded-2xl font-semibold text-[14px] border-2 transition-all active:scale-[0.98] ${phaseColorClass.menstrual} border-menstrual/30 bg-menstrual-soft dark:bg-menstrual-soft-dark`}
-            >
-              <span className="text-base">🩸</span>
-              <span>Period started today</span>
-            </Link>
-          </div>
-
+          <Link
+            href="/period"
+            className="btn-rose"
+          >
+            <span>🩸</span>
+            <span>My period started</span>
+          </Link>
         </div>
+
+        {/* ── Calendar ─────────────────────────────── */}
+        <CycleCalendar
+          lastPeriodDate={new Date(lastPeriodDateStr)}
+          cycleLengthAvg={profile.cycle_length_avg}
+          phase={phaseResult.phase}
+        />
+
+        {/* ── Tips (collapsible) ───────────────────── */}
+        <PhaseCard phaseResult={phaseResult} phaseData={phaseData} />
+
+        {/* ── Pattern teaser ───────────────────────── */}
+        {(logCount ?? 0) >= 7 && (logCount ?? 0) < 84 && (
+          <p className="text-center text-xs py-1" style={{ color: '#A8A4A0' }}>
+            Keep logging — patterns appear after 3 cycles.
+          </p>
+        )}
+
       </div>
 
       <BottomNav />
