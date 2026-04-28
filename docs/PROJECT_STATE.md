@@ -34,6 +34,33 @@
 
 ## In progress:
 - [ ] Suraj: Create Supabase project + run migration SQL (blocker for all Sprint 2 features)
+- [ ] Suraj: Generate VAPID keys → add VAPID_PUBLIC_KEY / VAPID_PRIVATE_KEY / VAPID_SUBJECT to .env.local
+  - How: `node -e "const wp=require('web-push'); console.log(wp.generateVAPIDKeys())"`
+- [ ] Suraj: Run db/migrations/002_push_subscriptions.sql in Supabase SQL editor
+- [ ] Suraj: Set CRON_SECRET env var and wire POST /api/push/send to a nightly cron (Vercel Cron or GitHub Actions at 21:00)
+- [ ] Sprint 3: Anomalous cycle exclusion ("mark as unusual, exclude from predictions")
+- [ ] Sprint 3: Icon-based logging upgrade (more visual than current text chips)
+- [ ] Sprint 3: Notification sensitivity controls (no fertility push to non-TTC users)
+- [ ] Sprint 3: Multi-month calendar view
+
+### Sprint 3 Wave A ✅ — Web push system (2026-04-28)
+- [x] FORGE: src/lib/webPush.ts — VAPID utilities + sendPushNotification helper
+- [x] FORGE: src/app/api/push/subscribe/route.ts — GET returns VAPID public key; POST upserts subscription
+- [x] FORGE: src/app/api/push/send/route.ts — sends nightly reminders to un-logged users (CRON_SECRET protected)
+- [x] FORGE: src/components/settings/NotificationToggle.tsx — registers sw.js, subscribes to web push, saves to server
+- [x] SEED: db/migrations/002_push_subscriptions.sql — push_subscriptions table + RLS
+- [x] TypeScript: 0 errors.
+
+### Sprint 2 Wave B ✅ — Home redesign + Period flow (2026-04-27)
+- [x] FORGE: src/components/mascot/Mascot.tsx — SVG phase-aware mascot (4 expressions, 4 color palettes)
+- [x] FORGE: src/components/calendar/CycleCalendar.tsx — month grid calendar (Monday-first, period/ovulation/predicted markers)
+- [x] FORGE: src/components/phase/QuickStats.tsx — 3-column Energy/Movement/Fertility quick stats
+- [x] FORGE: src/components/phase/TipAccordion.tsx — collapsible tip sections (nutrition defaults open)
+- [x] FORGE: src/components/phase/PhaseCard.tsx — updated to use new components; greeting moved to page.tsx
+- [x] FORGE: src/components/period/LogPeriodForm.tsx — flow intensity selector, writes to cycle_logs + updates user_profiles
+- [x] FORGE: src/app/period/page.tsx — period log page (auth + profile guard)
+- [x] FORGE: src/app/page.tsx — full home redesign (greeting + mascot + calendar + phase card + 2 CTAs + bottom nav)
+- [x] TypeScript: 0 errors. No console.log. 'use client' correctly placed.
 
 ## Completed since last update:
 - [x] ARIA/FORGE: 5 code bugs fixed (2026-04-27)

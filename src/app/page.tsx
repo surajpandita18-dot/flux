@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server'
 import { calculatePhase } from '@/lib/phaseEngine'
 import { getPhaseData } from '@/lib/phases'
 import { detectCycleAnomalies } from '@/lib/anomalyDetection'
+import Mascot from '@/components/mascot/Mascot'
+import CycleCalendar from '@/components/calendar/CycleCalendar'
 import PhaseCard from '@/components/phase/PhaseCard'
 import AnomalyBanner from '@/components/anomaly/AnomalyBanner'
 import StartButton from '@/components/StartButton'
@@ -34,7 +36,6 @@ export default async function HomePage() {
 
   const todayIso = new Date().toISOString().split('T')[0] ?? ''
 
-  // Fetch today's log status and total log count in parallel
   const [{ data: logData }, { count: logCount }, { data: cycleLogsData }] = await Promise.all([
     supabase
       .from('daily_logs')
@@ -56,7 +57,7 @@ export default async function HomePage() {
   const loggedToday = (logData as Pick<DailyLog, 'id'> | null) !== null
 
   // Anomaly detection
-  const periodDates = (cycleLogsData ?? []).map(
+  const periodDates  = (cycleLogsData ?? []).map(
     (r: { period_start_date: string }) => r.period_start_date,
   )
   const detectedTypes = detectCycleAnomalies(periodDates)
@@ -67,11 +68,10 @@ export default async function HomePage() {
     .eq('user_id', user.id)
     .is('dismissed_at', null)
 
-  const existingFlags = (existingFlagsData ?? []) as AnomalyFlag[]
+  const existingFlags    = (existingFlagsData ?? []) as AnomalyFlag[]
   const existingFlagTypes = new Set(existingFlags.map((f) => f.flag_type))
-
-  const newFlagTypes = detectedTypes.filter((t) => !existingFlagTypes.has(t))
-  let anomalyFlags = existingFlags
+  const newFlagTypes      = detectedTypes.filter((t) => !existingFlagTypes.has(t))
+  let   anomalyFlags      = existingFlags
 
   if (newFlagTypes.length > 0) {
     const { data: inserted } = await supabase
@@ -94,29 +94,60 @@ export default async function HomePage() {
     redirect('/onboarding')
   }
 
-  const phaseData = getPhaseData(phaseResult.phase)
+  if (!phaseResult) redirect('/onboarding')
+
+  const phaseData  = getPhaseData(phaseResult.phase)
+  const firstName  = profile.display_name.split(' ')[0] ?? profile.display_name
 
   return (
-    <main className="min-h-screen bg-white dark:bg-gray-950 px-4">
-      <PhaseCard
-        displayName={profile.display_name}
-        phaseResult={phaseResult}
-        phaseData={phaseData}
-      />
+    <main className="min-h-screen bg-white dark:bg-gray-950">
 
+      {/* ── Greeting + mascot ─────────────────────── */}
+      <div className="max-w-sm mx-auto px-5 pt-8 pb-2 flex items-center justify-between">
+        <div>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mb-0.5">Hey, {firstName}</p>
+          <p className="text-xl font-bold text-gray-900 dark:text-white leading-tight">
+            {phaseData.name}
+          </p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+            Day {phaseResult.dayNumber} of {phaseResult.totalDays}
+          </p>
+        </div>
+        <Mascot phase={phaseResult.phase} className="w-20 h-20" />
+      </div>
+
+      {/* ── Calendar ──────────────────────────────── */}
+      <div className="max-w-sm mx-auto px-4 mb-3">
+        <CycleCalendar
+          lastPeriodDate={new Date(lastPeriodDateStr)}
+          cycleLengthAvg={profile.cycle_length_avg}
+          phase={phaseResult.phase}
+        />
+      </div>
+
+      {/* ── Anomaly banner ────────────────────────── */}
       <AnomalyBanner flags={anomalyFlags} />
 
-      {/* Pattern teaser — shown after 7 days of logging, before 3 cycles worth */}
+      {/* ── Phase card (quick stats + expandable tips) */}
+      <div className="max-w-sm mx-auto px-4 mb-3">
+        <PhaseCard
+          phaseResult={phaseResult}
+          phaseData={phaseData}
+        />
+      </div>
+
+      {/* ── Pattern teaser ────────────────────────── */}
       {(logCount ?? 0) >= 7 && (logCount ?? 0) < 84 && (
-        <div className="max-w-sm mx-auto px-1 pb-3">
+        <div className="max-w-sm mx-auto px-5 pb-2">
           <p className="text-xs text-gray-400 dark:text-gray-500 text-center">
             Keep logging — after 3 cycles, Flux will show you your personal patterns.
           </p>
         </div>
       )}
 
-      {/* Daily log CTA */}
-      <div className="max-w-sm mx-auto pb-4">
+      {/* ── CTAs ──────────────────────────────────── */}
+      <div className="max-w-sm mx-auto px-4 space-y-2 pb-4">
+        {/* Primary: daily log */}
         <Link
           href="/log"
           className={`flex items-center justify-center w-full min-h-[52px] rounded-2xl font-semibold text-sm transition-opacity ${
@@ -127,14 +158,24 @@ export default async function HomePage() {
         >
           {loggedToday ? 'Logged today ✓' : 'Log how you feel'}
         </Link>
+
+        {/* Secondary: log period */}
+        <Link
+          href="/period"
+          className="flex items-center justify-center gap-2 w-full min-h-[44px] rounded-2xl font-semibold text-sm border-2 border-menstrual/30 text-menstrual bg-menstrual-soft dark:bg-menstrual-soft-dark transition-opacity hover:opacity-80"
+        >
+          <span>🩸</span>
+          <span>My period started</span>
+        </Link>
       </div>
 
-      {/* Bottom nav links */}
+      {/* ── Bottom nav ────────────────────────────── */}
       <div className="max-w-sm mx-auto pb-10 flex items-center justify-center gap-6">
         <Link href="/history"  className="text-xs text-gray-400 dark:text-gray-500 underline underline-offset-2">History</Link>
         <Link href="/partner"  className="text-xs text-gray-400 dark:text-gray-500 underline underline-offset-2">Partner</Link>
         <Link href="/settings" className="text-xs text-gray-400 dark:text-gray-500 underline underline-offset-2">Settings</Link>
       </div>
+
     </main>
   )
 }

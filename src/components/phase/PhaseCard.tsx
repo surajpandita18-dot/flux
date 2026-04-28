@@ -1,5 +1,7 @@
 import type { PhaseResult } from '@/lib/phaseEngine'
 import type { PhaseData } from '@/lib/phases'
+import QuickStats from './QuickStats'
+import TipAccordion from './TipAccordion'
 import EducationAccordion from './EducationAccordion'
 
 const phaseStyles = {
@@ -10,14 +12,13 @@ const phaseStyles = {
 } as const
 
 interface Props {
-  displayName: string
   phaseResult: PhaseResult
   phaseData: PhaseData
+  displayName?: string
 }
 
-export default function PhaseCard({ displayName, phaseResult, phaseData }: Props) {
+export default function PhaseCard({ phaseResult, phaseData, displayName }: Props) {
   const styles = phaseStyles[phaseResult.phase]
-  const firstName = displayName.split(' ')[0] ?? displayName
 
   const periodNote =
     phaseResult.daysUntilNextPeriod === 0
@@ -27,11 +28,7 @@ export default function PhaseCard({ displayName, phaseResult, phaseData }: Props
         : null
 
   return (
-    <div className="max-w-sm mx-auto w-full space-y-3 pt-6 pb-8">
-
-      <p className="text-sm text-gray-400 dark:text-gray-500 px-1">
-        Hey, {firstName}
-      </p>
+    <div className="space-y-2">
 
       {/* Main phase card */}
       <div className={`phase-card ${styles.card}`}>
@@ -58,37 +55,29 @@ export default function PhaseCard({ displayName, phaseResult, phaseData }: Props
         )}
       </div>
 
-      {/* Nutrition tip */}
-      <div className={`phase-card ${styles.card}`}>
-        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">
-          Nutrition today
-        </p>
-        <p className="text-gray-700 dark:text-gray-200 text-sm leading-relaxed">
-          {phaseData.nutrition.tip_card}
-        </p>
-      </div>
+      {/* Quick stats */}
+      <QuickStats phase={phaseResult.phase} />
 
-      {/* Movement tip */}
-      <div className={`phase-card ${styles.card}`}>
-        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">
-          Movement
-        </p>
-        <p className="text-gray-700 dark:text-gray-200 text-sm leading-relaxed">
-          {phaseData.exercise.tip_card}
-        </p>
-      </div>
+      {/* Expandable tip sections */}
+      <TipAccordion
+        label="Nutrition today"
+        content={phaseData.nutrition.tip_card}
+        cardClass={styles.card}
+        defaultOpen
+      />
 
-      {/* Mood note */}
-      <div className={`phase-card ${styles.card}`}>
-        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">
-          What to expect
-        </p>
-        <p className="text-gray-700 dark:text-gray-200 text-sm leading-relaxed">
-          {phaseData.mood.tip_card}
-        </p>
-      </div>
+      <TipAccordion
+        label="Movement"
+        content={phaseData.exercise.tip_card}
+        cardClass={styles.card}
+      />
 
-      {/* Why you feel this way — expandable */}
+      <TipAccordion
+        label="What to expect"
+        content={phaseData.mood.tip_card}
+        cardClass={styles.card}
+      />
+
       <EducationAccordion
         headline={phaseData.education.headline}
         body={phaseData.education.body}
