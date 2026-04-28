@@ -17,7 +17,10 @@ export function detectCycleAnomalies(periodStartDates: string[]): AnomalyFlagTyp
     if (!prevDate || !currDate) continue
     const prev = new Date(prevDate)
     const curr = new Date(currDate)
-    const days = Math.round((curr.getTime() - prev.getTime()) / (1000 * 60 * 60 * 24))
+    // UTC-safe diff — avoids DST off-by-one (mirrors phaseEngine.daysBetween)
+    const utcPrev = Date.UTC(prev.getFullYear(), prev.getMonth(), prev.getDate())
+    const utcCurr = Date.UTC(curr.getFullYear(), curr.getMonth(), curr.getDate())
+    const days = Math.floor((utcCurr - utcPrev) / (1000 * 60 * 60 * 24))
     lengths.push(days)
   }
 

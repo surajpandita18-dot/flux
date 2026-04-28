@@ -38,12 +38,11 @@ export default function OnboardingForm({ userId }: Props) {
       return
     }
 
-    router.push('/')
-    router.refresh()
+    window.location.href = '/'
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col">
+    <main className="min-h-screen bg-surface dark:bg-surface-dark flex flex-col">
       {/* Header */}
       <div className="phase-header-landing px-6 pt-16 pb-20 rounded-b-[2.5rem]">
         <p className="text-white/60 text-xs font-semibold uppercase tracking-widest mb-2">

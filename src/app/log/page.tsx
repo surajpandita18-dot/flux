@@ -15,34 +15,36 @@ export default async function LogPage() {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/')
 
-  const { data: profileData } = await supabase
-    .from('user_profiles')
-    .select('*')
-    .eq('user_id', user.id)
-    .maybeSingle()
+  const todayIso = new Date().toISOString().split('T')[0] ?? ''
 
-  const profile = profileData as UserProfile | null
+  // Parallel: profile and today's log only need user.id
+  const [{ data: profileData }, { data: existingLogData }] = await Promise.all([
+    supabase
+      .from('user_profiles')
+      .select('*')
+      .eq('user_id', user.id)
+      .maybeSingle(),
+    supabase
+      .from('daily_logs')
+      .select('id, energy_level, mood, symptoms')
+      .eq('user_id', user.id)
+      .eq('log_date', todayIso)
+      .maybeSingle(),
+  ])
+
+  const profile    = profileData as UserProfile | null
+  const existingLog = existingLogData as Pick<DailyLog, 'id' | 'energy_level' | 'mood' | 'symptoms'> | null
+
   if (!profile) redirect('/onboarding')
 
   const lastPeriodDateStr = profile.last_period_date
   if (!lastPeriodDateStr) redirect('/onboarding')
 
-  const todayIso = new Date().toISOString().split('T')[0] ?? ''
-
-  const { data: existingLogData } = await supabase
-    .from('daily_logs')
-    .select('id, energy_level, mood, symptoms')
-    .eq('user_id', user.id)
-    .eq('log_date', todayIso)
-    .maybeSingle()
-
-  const existingLog = existingLogData as Pick<DailyLog, 'id' | 'energy_level' | 'mood' | 'symptoms'> | null
-
   const phaseResult = calculatePhase(new Date(lastPeriodDateStr), profile.cycle_length_avg)
 
   if (existingLog) {
     return (
-      <main className="min-h-screen bg-gray-50 dark:bg-gray-950 px-4">
+      <main className="min-h-screen bg-surface dark:bg-surface-dark px-4">
         <div className="max-w-sm mx-auto pt-12 pb-10 space-y-5">
 
           <div className="flex items-center justify-between">

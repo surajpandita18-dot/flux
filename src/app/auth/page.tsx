@@ -28,7 +28,7 @@ export default function AuthPage() {
 
   if (sent) {
     return (
-      <main className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
+      <main className="min-h-screen flex flex-col bg-surface dark:bg-surface-dark">
         <div className="phase-header-landing h-40 rounded-b-[2rem]" />
         <div className="flex-1 flex flex-col items-center justify-center px-6 -mt-8">
           <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-card p-8 max-w-sm w-full text-center space-y-3">
@@ -50,7 +50,7 @@ export default function AuthPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950">
+    <main className="min-h-screen flex flex-col bg-surface dark:bg-surface-dark">
       {/* Header strip */}
       <div className="phase-header-landing px-6 pt-16 pb-16 rounded-b-[2rem]">
         <h1 className="text-white text-[40px] font-black tracking-[-1.5px] leading-none">Flux</h1>

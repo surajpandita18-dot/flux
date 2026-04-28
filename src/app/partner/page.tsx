@@ -25,7 +25,7 @@ export default async function PartnerPage() {
   >[]
 
   return (
-    <main className="min-h-screen bg-white dark:bg-gray-950 px-4">
+    <main className="min-h-screen bg-surface dark:bg-surface-dark px-4">
       <div className="max-w-sm mx-auto pt-10 pb-12 space-y-8">
 
         <div>

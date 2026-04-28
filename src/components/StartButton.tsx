@@ -38,7 +38,7 @@ export default function StartButton() {
       </div>
 
       {/* Bottom sheet */}
-      <div className="bg-white dark:bg-gray-950 rounded-t-[2rem] px-6 pt-8 pb-10">
+      <div className="bg-surface dark:bg-surface-dark rounded-t-[2rem] px-6 pt-8 pb-10">
         <div className="max-w-sm mx-auto space-y-4">
 
           <button

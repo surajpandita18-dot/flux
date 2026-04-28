@@ -21,7 +21,7 @@ export default async function SettingsPage() {
   const connections = (data ?? []) as PartnerConnection[]
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-950 pb-24">
+    <main className="min-h-screen bg-surface dark:bg-surface-dark pb-24">
       <div className="max-w-sm mx-auto px-4">
 
         <div className="pt-14 pb-6">

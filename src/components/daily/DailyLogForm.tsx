@@ -116,7 +116,7 @@ export default function DailyLogForm({ userId, phase, todayIso }: Props) {
 
   if (saved) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center px-6 bg-gray-50 dark:bg-gray-950">
+      <main className="min-h-screen flex flex-col items-center justify-center px-6 bg-surface dark:bg-surface-dark">
         <div className="max-w-sm w-full text-center space-y-5 animate-fade-up">
           <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mx-auto ${soft}`}>
             <span className="text-3xl">✓</span>
@@ -133,7 +133,7 @@ export default function DailyLogForm({ userId, phase, todayIso }: Props) {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col pb-8">
+    <main className="min-h-screen bg-surface dark:bg-surface-dark flex flex-col pb-8">
 
       {/* Phase header */}
       <div className={`${phaseHeaderClass[phase]} px-5 pt-14 pb-10 rounded-b-[2.5rem]`}>

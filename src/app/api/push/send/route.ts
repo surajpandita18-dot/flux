@@ -1,70 +1,77 @@
 import { NextResponse }              from 'next/server'
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { cookies }                   from 'next/headers'
+import { createClient }              from '@supabase/supabase-js'
 import { sendPushNotification, type PushSubscriptionRow } from '@/lib/webPush'
 
-// POST /api/push/send — sends today's reminder to all subscribed users who haven't logged
-// Intended to be triggered by a cron (e.g., Vercel Cron, GitHub Actions) at 21:00 local.
-// Protect with CRON_SECRET env var to prevent public triggering.
+// POST /api/push/send — sends today's reminder to subscribed users who haven't logged.
+// Triggered by a cron at 21:00 local. Requires Authorization: Bearer <CRON_SECRET>.
 export async function POST(request: Request) {
+  const secret = process.env.CRON_SECRET
+  if (!secret) {
+    return NextResponse.json({ error: 'CRON_SECRET not configured' }, { status: 500 })
+  }
+
   const auth = request.headers.get('authorization')
-  if (auth !== `Bearer ${process.env.CRON_SECRET ?? ''}`) {
+  if (auth !== `Bearer ${secret}`) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
   }
 
-  const cookieStore = cookies()
+  // Service role key bypasses RLS — required to read all users' subscriptions
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!serviceKey) {
+    return NextResponse.json({ error: 'SUPABASE_SERVICE_ROLE_KEY not configured' }, { status: 500 })
+  }
 
-  const supabase = createServerClient(
+  const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string)                         { return cookieStore.get(name)?.value },
-        set(name: string, value: string, opts: CookieOptions) { cookieStore.set({ name, value, ...opts }) },
-        remove(name: string, opts: CookieOptions) { cookieStore.set({ name, value: '', ...opts }) },
-      },
-    },
+    serviceKey,
+    { auth: { persistSession: false } },
   )
 
   const todayIso = new Date().toISOString().split('T')[0] ?? ''
 
-  // Find users who have a push subscription but haven't logged today
-  const { data: subs } = await supabase
-    .from('push_subscriptions')
-    .select('endpoint, p256dh, auth, user_id')
+  // Fetch subscriptions + today's logs in parallel
+  const [{ data: subs }, { data: todayLogs }] = await Promise.all([
+    supabase
+      .from('push_subscriptions')
+      .select('endpoint, p256dh, auth, user_id'),
+    supabase
+      .from('daily_logs')
+      .select('user_id')
+      .eq('log_date', todayIso),
+  ])
 
   if (!subs || subs.length === 0) {
     return NextResponse.json({ sent: 0 })
   }
 
-  const { data: todayLogs } = await supabase
-    .from('daily_logs')
-    .select('user_id')
-    .eq('log_date', todayIso)
-
   const loggedUserIds = new Set((todayLogs ?? []).map((l: { user_id: string }) => l.user_id))
-
   const pending = (subs as (PushSubscriptionRow & { user_id: string })[]).filter(
     (s) => !loggedUserIds.has(s.user_id),
   )
 
-  let sent = 0
-  for (const sub of pending) {
-    try {
-      await sendPushNotification(sub, {
+  // Send all notifications in parallel; remove expired subscriptions
+  const results = await Promise.allSettled(
+    pending.map((sub) =>
+      sendPushNotification(sub, {
         title: 'How are you feeling today?',
         body:  'Take 10 seconds to log your energy and mood.',
         url:   '/log',
-      })
-      sent++
-    } catch {
-      // Subscription may have expired — remove it
-      await supabase
-        .from('push_subscriptions')
-        .delete()
-        .eq('endpoint', sub.endpoint)
-    }
+      }),
+    ),
+  )
+
+  // Remove subscriptions that failed (expired/unsubscribed)
+  const expiredEndpoints = pending
+    .filter((_, i) => results[i]?.status === 'rejected')
+    .map((s) => s.endpoint)
+
+  if (expiredEndpoints.length > 0) {
+    await supabase
+      .from('push_subscriptions')
+      .delete()
+      .in('endpoint', expiredEndpoints)
   }
 
-  return NextResponse.json({ sent })
+  const sent = results.filter((r) => r.status === 'fulfilled').length
+  return NextResponse.json({ sent, expired: expiredEndpoints.length })
 }

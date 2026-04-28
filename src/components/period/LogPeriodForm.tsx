@@ -56,12 +56,11 @@ export default function LogPeriodForm({ userId, todayIso }: Props) {
       return
     }
 
-    router.push('/')
-    router.refresh()
+    window.location.href = '/'
   }
 
   return (
-    <main className="min-h-screen bg-white dark:bg-gray-950 flex flex-col justify-center px-5">
+    <main className="min-h-screen bg-surface dark:bg-surface-dark flex flex-col justify-center px-5">
       <div className="max-w-sm mx-auto w-full">
 
         {/* Back */}

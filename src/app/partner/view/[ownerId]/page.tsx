@@ -32,7 +32,7 @@ export default async function PartnerViewPage({ params }: Props) {
 
   if (error || !row) {
     return (
-      <main className="min-h-screen bg-white dark:bg-gray-950 px-4 flex items-center justify-center">
+      <main className="min-h-screen bg-surface dark:bg-surface-dark px-4 flex items-center justify-center">
         <div className="max-w-sm text-center space-y-3 px-4">
           <p className="text-gray-900 dark:text-white font-semibold">
             No access
@@ -54,7 +54,7 @@ export default async function PartnerViewPage({ params }: Props) {
     )
   } catch {
     return (
-      <main className="min-h-screen bg-white dark:bg-gray-950 px-4 flex items-center justify-center">
+      <main className="min-h-screen bg-surface dark:bg-surface-dark px-4 flex items-center justify-center">
         <p className="text-sm text-gray-400">Phase data unavailable right now.</p>
       </main>
     )
@@ -63,7 +63,7 @@ export default async function PartnerViewPage({ params }: Props) {
   const phaseData = getPhaseData(phaseResult.phase)
 
   return (
-    <main className="min-h-screen bg-white dark:bg-gray-950 px-4">
+    <main className="min-h-screen bg-surface dark:bg-surface-dark px-4">
       <PartnerPhaseCard
         ownerName={row.display_name}
         phaseResult={phaseResult}
