@@ -51,7 +51,7 @@ export default function StartButton() {
           </button>
 
           <p className="text-xs text-gray-400 text-center leading-relaxed">
-            No account needed. Your data stays on your device.
+            No email or password needed. Your data is private.
           </p>
 
         </div>

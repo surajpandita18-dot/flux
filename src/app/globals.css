@@ -2,6 +2,129 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Design tokens ─────────────────────────────────────────────── */
+:root {
+  --font-serif: var(--font-newsreader, 'Georgia', serif);
+
+  /* Cream surface */
+  --bg:      #F7F1E9;
+  --card:    #FBF6EE;
+  --surface: #F2E8D9;
+
+  /* Ink — deep teal */
+  --ink-h:   #1F4E4A;
+  --ink-b:   #3F5A57;
+  --ink-m:   #8FA09E;
+  --divider: rgba(31,78,74,0.12);
+  --shadow:  0 2px 18px rgba(80,52,30,0.06);
+
+  /* Contrast anchors */
+  --teal:         #1F4E4A;
+  --teal-soft:    #D4E1DF;
+  --saffron:      #E8A33D;
+  --saffron-deep: #B97A1F;
+  --saffron-soft: #FBE7C2;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:      #1A1612;
+    --card:    #1F1A14;
+    --surface: #2A2218;
+    --ink-h:   #E4F0EE;
+    --ink-b:   #A8BCBA;
+    --ink-m:   #5A6E6C;
+    --divider: rgba(228,240,238,0.08);
+    --shadow:  0 2px 14px rgba(0,0,0,0.45);
+    --teal:         #7BB5AF;
+    --teal-soft:    #1F2A29;
+    --saffron:      #E8A33D;
+    --saffron-deep: #F2BD66;
+    --saffron-soft: #2A2014;
+  }
+}
+
+/* ── Animation keyframes ───────────────────────────────────────── */
+@keyframes flux-stagger-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes flux-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes flux-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes flux-page-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+@keyframes flux-breathe {
+  0%, 100% { transform: scale(1);     }
+  50%       { transform: scale(1.028); }
+}
+
+@keyframes flux-mascot-sway {
+  0%, 100% { transform: rotate(-1.2deg); }
+  50%       { transform: rotate( 1.2deg); }
+}
+
+@keyframes flux-mascot-blink {
+  0%, 90%, 100% { transform: scaleY(1);   }
+  94%            { transform: scaleY(0.08); }
+}
+
+@keyframes flux-mascot-peek {
+  0%, 60%, 100% { transform: scaleY(1);   }
+  70%            { transform: scaleY(0.10); }
+  75%            { transform: scaleY(1);    }
+  80%            { transform: scaleY(0.10); }
+  85%            { transform: scaleY(1);    }
+}
+
+@keyframes flux-sparkle {
+  0%, 100% { opacity: 0.7; transform: scale(1) rotate(0deg);   }
+  50%       { opacity: 1;   transform: scale(1.3) rotate(15deg); }
+}
+
+@keyframes flux-sparkle-rise {
+  0%, 100% { opacity: 0.5; transform: translateY(0);  }
+  50%       { opacity: 0.9; transform: translateY(-5px); }
+}
+
+@keyframes flux-pulse-soft {
+  0%, 100% { opacity: 1;   transform: scale(1);    }
+  50%       { opacity: 0.6; transform: scale(1.06); }
+}
+
+@keyframes flux-glyph-spin-in {
+  from { opacity: 0; transform: rotate(-30deg) scale(0.7); }
+  to   { opacity: 1; transform: rotate(0)       scale(1);   }
+}
+
+@keyframes flux-glyph-pop {
+  0%   { transform: scale(0.6); }
+  65%  { transform: scale(1.18); }
+  100% { transform: scale(1);   }
+}
+
+@keyframes flux-check-circle-draw {
+  from { stroke-dashoffset: 360; }
+  to   { stroke-dashoffset: 0;   }
+}
+
+@keyframes flux-check-draw {
+  from { stroke-dashoffset: 90; }
+  to   { stroke-dashoffset: 0;  }
+}
+
+/* ── Base ──────────────────────────────────────────────────────── */
 @layer base {
   @media (prefers-reduced-motion: no-preference) {
     html { scroll-behavior: smooth; }
@@ -14,108 +137,125 @@
   html::-webkit-scrollbar { display: none; }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background-color: #FBF8F5;
-    color: #1A1814;
+    font-family: var(--font-inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif);
+    background-color: #F7F1E9;
+    color: #1F4E4A;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   @media (prefers-color-scheme: dark) {
     body {
-      background-color: #111110;
-      color: #F5F3F0;
+      background-color: #1A1612;
+      color: #E4F0EE;
     }
   }
 
   * { @apply box-border; }
 }
 
+/* ── Components ────────────────────────────────────────────────── */
 @layer components {
 
-  /* ── Phase gradient headers — soft pastels (log/period screens) */
+  /* Serif editorial class */
+  .serif {
+    font-family: var(--font-serif);
+  }
+  .serif-italic {
+    font-family: var(--font-serif);
+    font-style: italic;
+  }
+
+  /* Page entry animation */
+  .page-enter {
+    animation: flux-page-enter 400ms cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  /* Stagger helpers — applied via inline style delay in components */
+  .stagger-rise {
+    animation: flux-stagger-rise 520ms cubic-bezier(0.22,1,0.36,1) both;
+  }
+
+  /* ── Phase gradient headers — log/period screens */
   .phase-header-menstrual  { background: linear-gradient(160deg, #FECDD3 0%, #FB7185 50%, #E8627C 100%); }
   .phase-header-follicular { background: linear-gradient(160deg, #BBF7D0 0%, #4ADE80 50%, #16A34A 100%); }
   .phase-header-ovulation  { background: linear-gradient(160deg, #FEF9C3 0%, #FDE047 50%, #CA8A04 100%); }
   .phase-header-luteal     { background: linear-gradient(160deg, #DDD6FE 0%, #A78BFA 50%, #7C3AED 100%); }
-
-  /* ── Landing screen — warm deep */
   .phase-header-landing    { background: linear-gradient(160deg, #2D2420 0%, #1A1410 50%, #0D0B08 100%); }
 
   /* ── Cards */
   .card {
-    background-color: #FFFFFF;
+    background-color: #FBF6EE;
     border-radius: 1.5rem;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+    box-shadow: 0 2px 18px rgba(80,52,30,0.06);
   }
-
   @media (prefers-color-scheme: dark) {
-    .card {
-      background-color: #1C1B1A;
-    }
+    .card { background-color: #1F1A14; }
   }
 
-  /* ── Legacy phase-card */
-  .phase-card   { @apply rounded-2xl p-5; }
-  .touch-target { @apply min-h-[44px] min-w-[44px]; }
-
-  /* ── Shared input */
+  /* ── Input */
   .input {
     @apply w-full min-h-[52px] px-4 py-3.5 rounded-2xl
            border-0 text-[16px] font-medium transition-all
            focus:outline-none focus:ring-2;
-    background-color: #F7F4F1;
-    color: #1A1814;
+    background-color: #F2E8D9;
+    color: #1F4E4A;
   }
-
   @media (prefers-color-scheme: dark) {
-    .input {
-      background-color: #252320;
-      color: #F5F3F0;
-    }
+    .input { background-color: #2A2218; color: #E4F0EE; }
   }
 
-  /* ── Primary CTA — near-black (not phase color) */
+  /* ── Primary CTA */
   .btn-primary {
     @apply flex items-center justify-center w-full min-h-[54px]
            font-semibold text-[15px] rounded-2xl
            transition-all active:scale-[0.98]
            disabled:opacity-40 disabled:cursor-not-allowed;
-    background-color: #1A1814;
-    color: #FFFFFF;
+    background-color: #1F4E4A;
+    color: #FBF6EE;
   }
-
   @media (prefers-color-scheme: dark) {
-    .btn-primary {
-      background-color: #F5F3F0;
-      color: #1A1814;
-    }
+    .btn-primary { background-color: #E4F0EE; color: #1F4E4A; }
   }
 
-  /* ── Rose CTA (period log, accent actions) */
+  /* ── Rose CTA */
   .btn-rose {
     @apply flex items-center justify-center gap-2 w-full min-h-[50px]
-           font-semibold text-[15px] rounded-2xl text-white
+           font-semibold text-[15px] rounded-2xl
            transition-all active:scale-[0.98];
-    background-color: #E8627C;
+    background-color: #C76B4A;
+    color: #FBF6EE;
   }
 
   /* ── Section label */
   .section-label {
     @apply text-[11px] font-bold uppercase tracking-[0.12em];
-    color: #A8A4A0;
+    color: var(--ink-m);
   }
 
-  /* ── Safe area */
-  .pb-safe {
-    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
-  }
-  .pt-safe {
-    padding-top: max(env(safe-area-inset-top), 1rem);
-  }
+  /* ── Safe area padding */
+  .pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 1rem); }
+  .pt-safe { padding-top:    max(env(safe-area-inset-top),    1rem); }
 
   /* ── Shadow utilities */
-  .shadow-soft { box-shadow: 0 2px 16px rgba(0,0,0,0.06); }
-  .shadow-card { box-shadow: 0 4px 24px rgba(0,0,0,0.07); }
+  .shadow-soft { box-shadow: 0 2px 16px rgba(80,52,30,0.06); }
+  .shadow-card { box-shadow: 0 4px 24px rgba(80,52,30,0.07); }
+  .shadow-lift { box-shadow: 0 8px 32px rgba(80,52,30,0.12); }
+
+  /* ── Phase tap / active scale */
+  .tap-scale {
+    @apply transition-transform active:scale-[0.97];
+  }
+
+  /* ── Mascot breathe wrapper */
+  .mascot-breathe {
+    animation: flux-breathe 3.5s ease-in-out infinite;
+    transform-origin: center;
+    display: inline-block;
+  }
+  .mascot-sway {
+    animation: flux-mascot-sway 5.2s ease-in-out infinite;
+    transform-origin: center bottom;
+    display: inline-block;
+  }
 }

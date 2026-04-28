@@ -1,9 +1,6 @@
-import type { Phase } from '@/lib/phaseEngine'
-
 interface Props {
   lastPeriodDate: Date
   cycleLengthAvg: number
-  phase: Phase
 }
 
 const DAY_LABELS = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
@@ -59,14 +56,7 @@ function getStatus(
   return null
 }
 
-const phaseAccent: Record<Phase, string> = {
-  menstrual:  'bg-menstrual  dark:bg-menstrual-soft-dark',
-  follicular: 'bg-follicular dark:bg-follicular-soft-dark',
-  ovulation:  'bg-ovulation  dark:bg-ovulation-soft-dark',
-  luteal:     'bg-luteal     dark:bg-luteal-soft-dark',
-}
-
-export default function CycleCalendar({ lastPeriodDate, cycleLengthAvg, phase }: Props) {
+export default function CycleCalendar({ lastPeriodDate, cycleLengthAvg }: Props) {
   const today    = new Date()
   const year     = today.getFullYear()
   const month    = today.getMonth()
@@ -103,13 +93,13 @@ export default function CycleCalendar({ lastPeriodDate, cycleLengthAvg, phase }:
       case 'period':
         return 'bg-menstrual/80 text-white rounded-full font-semibold'
       case 'today-period':
-        return 'bg-menstrual text-white rounded-full font-bold ring-2 ring-offset-1 ring-menstrual'
+        return 'bg-menstrual text-white rounded-full font-bold ring-2 ring-offset-1 ring-[#E8627C]'
       case 'ovulation':
-        return 'bg-ovulation/70 text-white rounded-full font-semibold'
+        return 'bg-ovulation/80 text-[#1A1814] rounded-full font-semibold'
       case 'today-ovulation':
-        return 'bg-ovulation text-white rounded-full font-bold ring-2 ring-offset-1 ring-ovulation'
+        return 'bg-ovulation text-[#1A1814] rounded-full font-bold ring-2 ring-offset-1 ring-[#E8627C]'
       case 'today':
-        return `${phaseAccent[phase]} text-gray-900 dark:text-white rounded-full font-bold ring-2 ring-offset-1`
+        return 'bg-[#E8627C] text-white rounded-full font-bold'
       case 'predicted':
         return 'bg-menstrual/25 text-menstrual rounded-full font-medium'
       default:
@@ -118,13 +108,13 @@ export default function CycleCalendar({ lastPeriodDate, cycleLengthAvg, phase }:
   }
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+    <div className="bg-[#FFFFFF] dark:bg-[#1C1B1A] rounded-3xl p-4 shadow-soft border border-[#F0EBE6] dark:border-white/5">
       {/* Header: month + legend */}
       <div className="flex items-center justify-between mb-3">
-        <span className="text-sm font-bold text-gray-900 dark:text-white">
+        <span className="text-sm font-bold text-[#1A1814] dark:text-[#F5F3F0]">
           {monthName} {year}
         </span>
-        <div className="flex items-center gap-3 text-[10px] text-gray-400">
+        <div className="flex items-center gap-3 text-[11px] text-[#A8A4A0]">
           <span className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-menstrual inline-block" />
             Period
@@ -135,7 +125,7 @@ export default function CycleCalendar({ lastPeriodDate, cycleLengthAvg, phase }:
           </span>
           <span className="flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-menstrual/30 inline-block" />
-            Predicted
+            Next
           </span>
         </div>
       </div>
@@ -145,7 +135,7 @@ export default function CycleCalendar({ lastPeriodDate, cycleLengthAvg, phase }:
         {DAY_LABELS.map((d, i) => (
           <div
             key={i}
-            className="text-center text-[10px] font-bold uppercase tracking-wider text-gray-300 dark:text-gray-600 py-1"
+            className="text-center text-[11px] font-semibold text-[#A8A4A0] dark:text-[#5C5754] py-1"
           >
             {d}
           </div>
@@ -168,8 +158,8 @@ export default function CycleCalendar({ lastPeriodDate, cycleLengthAvg, phase }:
       </div>
 
       {/* Days until next period */}
-      <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between text-[11px] text-gray-400">
-        <span>Next period in <strong className="text-gray-600 dark:text-gray-300">{Math.max(0, Math.round((utcDay(nextPeriodStart) - utcToday) / msPerDay))} days</strong></span>
+      <div className="mt-3 pt-3 border-t border-[#F0EBE6] dark:border-white/5 flex items-center justify-between text-[11px] text-[#A8A4A0]">
+        <span>Next period in <strong className="text-[#5C5754] dark:text-[#A8A4A0]">{Math.max(0, Math.round((utcDay(nextPeriodStart) - utcToday) / msPerDay))} days</strong></span>
         <span>{nextPeriodStart.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>
       </div>
     </div>

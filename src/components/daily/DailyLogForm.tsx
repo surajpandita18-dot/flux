@@ -5,57 +5,46 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import type { Phase } from '@/lib/phaseEngine'
 import affirmations from '../../../content/affirmations.json'
+import {
+  GlyphEnergyLow,
+  GlyphEnergyOkay,
+  GlyphEnergyHigh,
+  GlyphMood,
+} from './LogGlyphs'
 
-const ENERGY_OPTIONS = [
-  { value: 'low',    label: 'Low',   emoji: '🪫', desc: 'Running on empty' },
-  { value: 'medium', label: 'Okay',  emoji: '🔋', desc: 'Getting by'       },
-  { value: 'high',   label: 'Good',  emoji: '⚡', desc: 'Feeling it'       },
-] as const
+const PHASE_ACCENT: Record<Phase, string> = {
+  menstrual:  '#C76B4A',
+  follicular: '#7A8F5C',
+  ovulation:  '#D49A3D',
+  luteal:     '#8B6F8C',
+}
 
-const MOOD_OPTIONS = [
-  { value: 'tender',     emoji: '💗', label: 'Tender'     },
-  { value: 'grounded',   emoji: '🌿', label: 'Grounded'   },
-  { value: 'clear',      emoji: '✨', label: 'Clear'       },
-  { value: 'expansive',  emoji: '🌊', label: 'Expansive'  },
-  { value: 'scattered',  emoji: '💭', label: 'Scattered'  },
-  { value: 'anxious',    emoji: '😬', label: 'Anxious'    },
-  { value: 'frustrated', emoji: '😤', label: 'Frustrated' },
-  { value: 'withdrawn',  emoji: '🌙', label: 'Withdrawn'  },
-] as const
+const PHASE_SOFT: Record<Phase, string> = {
+  menstrual:  '#FDF0EC',
+  follicular: '#EFF5EC',
+  ovulation:  '#FBF4E6',
+  luteal:     '#F0ECF5',
+}
+
+const PHASE_LABEL: Record<Phase, string> = {
+  menstrual:  'Rest phase',
+  follicular: 'Build phase',
+  ovulation:  'Peak phase',
+  luteal:     'Protect phase',
+}
+
+const POST_LOG_MESSAGES: Record<Phase, string> = {
+  menstrual:  'Rest is productive too.',
+  follicular: 'You\'re building momentum.',
+  ovulation:  'You\'re in your element right now.',
+  luteal:     'You showed up for yourself today.',
+}
 
 const SYMPTOM_CHIPS = [
   'Cramps', 'Bloating', 'Headache', 'Fatigue',
   'Mood swings', 'Cravings', 'Backache', 'Tender breasts',
   'Nausea', 'Insomnia', 'Brain fog', 'Spotting',
 ]
-
-const POST_LOG_MESSAGES: Record<Phase, string> = {
-  menstrual:  'Logged. Rest is productive too.',
-  follicular: 'Logged. You\'re building momentum.',
-  ovulation:  'Logged. You\'re in your element right now.',
-  luteal:     'Logged. You showed up for yourself today.',
-}
-
-const phaseAccent: Record<Phase, string> = {
-  menstrual:  'bg-menstrual  text-white',
-  follicular: 'bg-follicular text-white',
-  ovulation:  'bg-ovulation  text-white',
-  luteal:     'bg-luteal     text-white',
-}
-
-const phaseSoft: Record<Phase, string> = {
-  menstrual:  'bg-menstrual-soft  dark:bg-menstrual-soft-dark  text-menstrual',
-  follicular: 'bg-follicular-soft dark:bg-follicular-soft-dark text-follicular',
-  ovulation:  'bg-ovulation-soft  dark:bg-ovulation-soft-dark  text-ovulation',
-  luteal:     'bg-luteal-soft     dark:bg-luteal-soft-dark     text-luteal',
-}
-
-const phaseHeaderClass: Record<Phase, string> = {
-  menstrual:  'phase-header-menstrual',
-  follicular: 'phase-header-follicular',
-  ovulation:  'phase-header-ovulation',
-  luteal:     'phase-header-luteal',
-}
 
 interface Props {
   userId: string
@@ -65,6 +54,29 @@ interface Props {
 
 type EnergyValue = 'low' | 'medium' | 'high'
 type MoodValue   = 'tender' | 'grounded' | 'clear' | 'expansive' | 'scattered' | 'anxious' | 'frustrated' | 'withdrawn'
+
+const ENERGY_OPTIONS: { value: EnergyValue; label: string; desc: string }[] = [
+  { value: 'low',    label: 'Low',  desc: 'Running on empty' },
+  { value: 'medium', label: 'Okay', desc: 'Getting by'       },
+  { value: 'high',   label: 'Good', desc: 'Feeling it'       },
+]
+
+const MOOD_OPTIONS: { value: MoodValue; label: string }[] = [
+  { value: 'tender',     label: 'Tender'     },
+  { value: 'grounded',   label: 'Grounded'   },
+  { value: 'clear',      label: 'Clear'       },
+  { value: 'expansive',  label: 'Expansive'  },
+  { value: 'scattered',  label: 'Scattered'  },
+  { value: 'anxious',    label: 'Anxious'    },
+  { value: 'frustrated', label: 'Frustrated' },
+  { value: 'withdrawn',  label: 'Withdrawn'  },
+]
+
+function EnergyGlyph({ value, size, color, glow }: { value: EnergyValue; size?: number; color?: string; glow?: boolean }) {
+  if (value === 'low')    return <GlyphEnergyLow  size={size} color={color} glow={glow} />
+  if (value === 'medium') return <GlyphEnergyOkay size={size} color={color} glow={glow} />
+  return                         <GlyphEnergyHigh  size={size} color={color} glow={glow} />
+}
 
 export default function DailyLogForm({ userId, phase, todayIso }: Props) {
   const router = useRouter()
@@ -76,8 +88,8 @@ export default function DailyLogForm({ userId, phase, todayIso }: Props) {
   const [saved,       setSaved]       = useState(false)
   const [affirmation, setAffirmation] = useState('')
 
-  const accent = phaseAccent[phase]
-  const soft   = phaseSoft[phase]
+  const accent = PHASE_ACCENT[phase]
+  const softBg = PHASE_SOFT[phase]
 
   function toggleSymptom(s: string) {
     setSymptoms((prev) => {
@@ -111,45 +123,81 @@ export default function DailyLogForm({ userId, phase, todayIso }: Props) {
     const pool = affirmations[phase]
     setAffirmation(pool[Math.floor(Math.random() * pool.length)] ?? '')
     setSaved(true)
-    setTimeout(() => { router.push('/'); router.refresh() }, 2500)
+    setTimeout(() => { router.push('/'); router.refresh() }, 2800)
   }
 
   if (saved) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center px-6 bg-surface dark:bg-surface-dark">
-        <div className="max-w-sm w-full text-center space-y-5 animate-fade-up">
-          <div className={`w-20 h-20 rounded-3xl flex items-center justify-center mx-auto ${soft}`}>
-            <span className="text-3xl">✓</span>
+      <main className="min-h-screen flex flex-col items-center justify-center px-6" style={{ background: '#F7F1E9' }}>
+        <div className="max-w-sm w-full text-center space-y-6" style={{ animation: 'flux-fade 0.5s ease-out both' }}>
+          {/* Check circle */}
+          <div className="flex justify-center">
+            <svg width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden>
+              <circle cx="36" cy="36" r="32"
+                stroke={accent} strokeWidth="3"
+                strokeDasharray="201" strokeDashoffset="201"
+                strokeLinecap="round"
+                style={{ animation: 'flux-check-circle-draw 0.7s ease-out 0.1s forwards' }}
+              />
+              <path d="M22 36 L32 46 L50 28"
+                stroke={accent} strokeWidth="3.5"
+                strokeLinecap="round" strokeLinejoin="round"
+                strokeDasharray="90" strokeDashoffset="90"
+                style={{ animation: 'flux-check-draw 0.4s ease-out 0.7s forwards' }}
+              />
+            </svg>
           </div>
-          <p className="text-2xl font-bold text-gray-900 dark:text-white leading-snug">
-            {affirmation}
-          </p>
-          <p className="text-sm text-gray-500">
-            {POST_LOG_MESSAGES[phase]}
-          </p>
+          <div className="space-y-2">
+            <p className="text-[22px] leading-snug font-medium serif-italic" style={{ color: '#1F4E4A' }}>
+              {affirmation}
+            </p>
+            <p className="text-[13px]" style={{ color: '#8FA09E' }}>
+              {POST_LOG_MESSAGES[phase]}
+            </p>
+          </div>
         </div>
       </main>
     )
   }
 
   return (
-    <main className="min-h-screen bg-surface dark:bg-surface-dark flex flex-col pb-8">
+    <main className="min-h-screen flex flex-col pb-28" style={{ background: '#F7F1E9' }}>
 
-      {/* Phase header */}
-      <div className={`${phaseHeaderClass[phase]} px-5 pt-14 pb-10 rounded-b-[2.5rem]`}>
-        <p className="text-white/60 text-xs font-bold uppercase tracking-widest mb-1">
-          Daily check-in
+      {/* Editorial header — matches prototype */}
+      <div
+        className="px-6 pt-16 pb-8 relative"
+        style={{
+          background: `radial-gradient(120% 80% at 50% 0%, ${softBg} 0%, #F7F1E9 75%)`,
+        }}
+      >
+        {/* Decorative ornament */}
+        <div className="flex items-center justify-center gap-2.5 mb-4">
+          <span style={{ width: 28, height: 1, background: accent, opacity: 0.45 }} />
+          <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
+            <circle cx="5" cy="5" r="2" fill={accent} opacity="0.7" />
+          </svg>
+          <span style={{ width: 28, height: 1, background: accent, opacity: 0.45 }} />
+        </div>
+
+        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-center mb-3" style={{ color: accent }}>
+          A moment with yourself
         </p>
-        <h1 className="text-white text-[34px] font-extrabold tracking-tight leading-none">
-          How are you<br />today?
+        <h1 className="text-[38px] font-medium leading-[1.04] tracking-tight text-center serif" style={{ color: '#1F4E4A' }}>
+          How are you<br /><span className="serif-italic" style={{ color: accent }}>arriving?</span>
         </h1>
+        <p className="serif-italic text-[14px] leading-relaxed text-center mt-3.5 mx-auto" style={{ color: '#3F5A57', maxWidth: 240 }}>
+          there are no wrong answers — only what&apos;s true now
+        </p>
       </div>
 
-      <div className="max-w-sm mx-auto w-full px-4 -mt-4 space-y-4">
+      <div className="max-w-sm mx-auto w-full px-4 pt-5 space-y-4">
 
         {/* Energy */}
-        <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-soft p-5 space-y-3">
-          <p className="section-label">Energy</p>
+        <section
+          className="card p-5 space-y-3"
+          style={{ animationDelay: '60ms' }}
+        >
+          <p className="section-label">Your energy</p>
           <div className="grid grid-cols-3 gap-2.5">
             {ENERGY_OPTIONS.map((opt) => {
               const selected = energy === opt.value
@@ -158,26 +206,38 @@ export default function DailyLogForm({ userId, phase, todayIso }: Props) {
                   key={opt.value}
                   type="button"
                   onClick={() => setEnergy(opt.value)}
-                  className={`min-h-[80px] flex flex-col items-center justify-center gap-1.5 rounded-2xl border-2 transition-all active:scale-[0.97] ${
-                    selected
-                      ? `${accent} border-transparent shadow-soft`
-                      : 'border-gray-100 dark:border-gray-800 text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800/50'
-                  }`}
+                  className="min-h-[88px] flex flex-col items-center justify-center gap-2 rounded-2xl transition-all active:scale-[0.97]"
+                  style={{
+                    background: selected ? softBg : '#F2E8D9',
+                    border: `2px solid ${selected ? accent : 'transparent'}`,
+                    boxShadow: selected ? `0 0 0 1px ${accent}22` : 'none',
+                  }}
+                  aria-pressed={selected}
                 >
-                  <span className="text-2xl">{opt.emoji}</span>
-                  <span className="text-xs font-bold">{opt.label}</span>
-                  <span className={`text-[9px] font-medium ${selected ? 'text-white/70' : 'text-gray-400'}`}>
-                    {opt.desc}
-                  </span>
+                  <EnergyGlyph
+                    value={opt.value}
+                    size={28}
+                    color={selected ? accent : '#8B6F5C'}
+                    glow={selected}
+                  />
+                  <div className="text-center">
+                    <p className="text-[12px] font-semibold" style={{ color: selected ? accent : '#3F5A57' }}>
+                      {opt.label}
+                    </p>
+                    <p className="text-[9px]" style={{ color: '#8FA09E' }}>{opt.desc}</p>
+                  </div>
                 </button>
               )
             })}
           </div>
-        </div>
+        </section>
 
         {/* Mood */}
-        <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-soft p-5 space-y-3">
-          <p className="section-label">Mood</p>
+        <section
+          className="card p-5 space-y-3"
+          style={{ animationDelay: '120ms' }}
+        >
+          <p className="section-label">Your weather inside</p>
           <div className="grid grid-cols-4 gap-2">
             {MOOD_OPTIONS.map((opt) => {
               const selected = mood === opt.value
@@ -186,25 +246,36 @@ export default function DailyLogForm({ userId, phase, todayIso }: Props) {
                   key={opt.value}
                   type="button"
                   onClick={() => setMood(opt.value)}
-                  className={`min-h-[68px] flex flex-col items-center justify-center gap-1 rounded-2xl border-2 transition-all active:scale-[0.97] ${
-                    selected
-                      ? `${accent} border-transparent shadow-soft`
-                      : 'border-gray-100 dark:border-gray-800 text-gray-600 dark:text-gray-300 bg-gray-50 dark:bg-gray-800/50'
-                  }`}
+                  className="min-h-[72px] flex flex-col items-center justify-center gap-1.5 rounded-2xl transition-all active:scale-[0.97]"
+                  style={{
+                    background: selected ? softBg : '#F2E8D9',
+                    border: `2px solid ${selected ? accent : 'transparent'}`,
+                  }}
+                  aria-pressed={selected}
                 >
-                  <span className="text-xl">{opt.emoji}</span>
-                  <span className="text-[9px] font-bold capitalize">{opt.label}</span>
+                  <GlyphMood
+                    kind={opt.value}
+                    size={24}
+                    color={selected ? accent : '#8B6F5C'}
+                    glow={selected}
+                  />
+                  <p className="text-[9px] font-semibold capitalize" style={{ color: selected ? accent : '#5A6E6C' }}>
+                    {opt.label}
+                  </p>
                 </button>
               )
             })}
           </div>
-        </div>
+        </section>
 
         {/* Symptoms */}
-        <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-soft p-5 space-y-3">
+        <section
+          className="card p-5 space-y-3"
+          style={{ animationDelay: '180ms' }}
+        >
           <div className="flex items-baseline gap-2">
-            <p className="section-label">Symptoms</p>
-            <span className="text-[10px] text-gray-300 dark:text-gray-600">optional</span>
+            <p className="section-label">What&apos;s asking to be noticed</p>
+            <span className="text-[10px]" style={{ color: '#C4B8AC' }}>optional</span>
           </div>
           <div className="flex flex-wrap gap-2">
             {SYMPTOM_CHIPS.map((s) => {
@@ -214,31 +285,44 @@ export default function DailyLogForm({ userId, phase, todayIso }: Props) {
                   key={s}
                   type="button"
                   onClick={() => toggleSymptom(s)}
-                  className={`min-h-[36px] px-3.5 py-1.5 rounded-full text-[13px] font-medium border transition-all active:scale-[0.97] ${
-                    selected
-                      ? `${accent} border-transparent`
-                      : 'border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 bg-white dark:bg-gray-900'
-                  }`}
+                  className="min-h-[36px] px-3.5 py-1.5 rounded-full text-[13px] font-medium transition-all active:scale-[0.97]"
+                  style={{
+                    background: selected ? accent : '#F2E8D9',
+                    color: selected ? '#FBF6EE' : '#3F5A57',
+                  }}
+                  aria-pressed={selected}
                 >
                   {s}
                 </button>
               )
             })}
           </div>
-        </div>
+        </section>
 
         {error && (
-          <p className="text-red-600 dark:text-red-400 text-sm px-1" role="alert">{error}</p>
+          <p className="text-[13px] px-1" style={{ color: '#C76B4A' }} role="alert">{error}</p>
         )}
 
         <button
           type="button"
           onClick={handleSubmit}
           disabled={!energy || !mood || loading}
-          className="btn-primary"
+          className="w-full min-h-[56px] rounded-[18px] font-medium text-[15px] transition-all active:scale-[0.98] disabled:opacity-40"
+          style={{
+            background: loading ? accent : `linear-gradient(180deg, ${accent} 0%, #8B5A3C 100%)`,
+            color: '#FBF6EE',
+            boxShadow: `0 8px 20px rgba(139,90,60,0.20)`,
+            letterSpacing: '-0.05px',
+          }}
         >
-          {loading ? 'Saving…' : 'Save check-in'}
+          {loading ? 'Saving…' : (
+            <><span className="serif-italic font-medium mr-1.5">Hold</span><span>this in the day</span></>
+          )}
         </button>
+
+        <p className="serif-italic text-[12px] text-center mt-1.5" style={{ color: '#8FA09E' }}>
+          a small offering, kept softly
+        </p>
 
       </div>
     </main>

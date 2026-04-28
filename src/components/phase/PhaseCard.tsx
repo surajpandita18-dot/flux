@@ -5,10 +5,10 @@ import TipAccordion from './TipAccordion'
 import EducationAccordion from './EducationAccordion'
 
 const phaseStyles = {
-  menstrual:  { dot: 'bg-menstrual',  label: 'text-menstrual',  card: 'bg-menstrual-soft  dark:bg-menstrual-soft-dark'  },
-  follicular: { dot: 'bg-follicular', label: 'text-follicular', card: 'bg-follicular-soft dark:bg-follicular-soft-dark' },
-  ovulation:  { dot: 'bg-ovulation',  label: 'text-ovulation',  card: 'bg-ovulation-soft  dark:bg-ovulation-soft-dark'  },
-  luteal:     { dot: 'bg-luteal',     label: 'text-luteal',     card: 'bg-luteal-soft     dark:bg-luteal-soft-dark'     },
+  menstrual:  { dot: 'bg-menstrual',  label: 'text-[#5C5754] dark:text-[#A8A4A0]', card: 'bg-menstrual-soft  dark:bg-menstrual-soft-dark'  },
+  follicular: { dot: 'bg-follicular', label: 'text-[#5C5754] dark:text-[#A8A4A0]', card: 'bg-follicular-soft dark:bg-follicular-soft-dark' },
+  ovulation:  { dot: 'bg-ovulation',  label: 'text-[#5C5754] dark:text-[#A8A4A0]', card: 'bg-ovulation-soft  dark:bg-ovulation-soft-dark'  },
+  luteal:     { dot: 'bg-luteal',     label: 'text-[#5C5754] dark:text-[#A8A4A0]', card: 'bg-luteal-soft     dark:bg-luteal-soft-dark'     },
 } as const
 
 interface Props {
@@ -34,7 +34,7 @@ export default function PhaseCard({ phaseResult, phaseData }: Props) {
       <div className={`${styles.card} rounded-3xl px-5 py-4`}>
         <div className="flex items-center gap-2 mb-3">
           <span className={`w-2 h-2 rounded-full flex-shrink-0 ${styles.dot}`} />
-          <span className={`text-[10px] font-bold uppercase tracking-[0.14em] ${styles.label}`}>
+          <span className={`text-[11px] font-bold uppercase tracking-[0.14em] ${styles.label}`}>
             {phaseData.name}
           </span>
           <span className="ml-auto text-[11px] text-gray-400">
@@ -47,7 +47,7 @@ export default function PhaseCard({ phaseResult, phaseData }: Props) {
         </p>
 
         {periodNote && (
-          <p className={`mt-3 text-xs font-semibold ${styles.label} opacity-80`}>
+          <p className="mt-3 text-xs font-semibold text-[#5C5754] dark:text-[#A8A4A0]">
             {periodNote}
           </p>
         )}

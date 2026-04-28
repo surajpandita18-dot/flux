@@ -16,12 +16,17 @@ export default function EducationAccordion({ headline, body, cardClass }: Props)
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between text-left"
+        className="w-full flex items-center justify-between text-left min-h-[28px]"
       >
-        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
+        <p className="text-[11px] font-bold uppercase tracking-widest text-[#5C5754] dark:text-[#A8A4A0]">
           {headline}
         </p>
-        <span className="text-gray-400 text-xs ml-2">{open ? '▲' : '▼'}</span>
+        <span
+          className="text-[#A8A4A0] text-xs ml-2 transition-transform duration-200 leading-none"
+          style={{ transform: open ? 'rotate(180deg)' : 'rotate(0deg)' }}
+        >
+          ▼
+        </span>
       </button>
 
       {open && (

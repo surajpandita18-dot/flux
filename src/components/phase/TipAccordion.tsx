@@ -20,7 +20,7 @@ export default function TipAccordion({ label, content, cardClass, defaultOpen = 
         className="w-full flex items-center justify-between text-left min-h-[28px]"
         aria-expanded={open}
       >
-        <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">
+        <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#5C5754] dark:text-[#A8A4A0]">
           {label}
         </span>
         <span

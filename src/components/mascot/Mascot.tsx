@@ -1,95 +1,116 @@
 import type { Phase } from '@/lib/phaseEngine'
 
-interface Props {
-  phase: Phase
-  className?: string
+interface Props { phase: Phase; className?: string; size?: number }
+
+const PAL: Record<Phase, { body: string; ear: string; accent: string; cheek: string }> = {
+  menstrual:  { body: '#FECDD3', ear: '#FDA4AF', accent: '#F43F5E', cheek: '#F43F5E' },
+  follicular: { body: '#FEF9C3', ear: '#FDE68A', accent: '#65A30D', cheek: '#84CC16' },
+  ovulation:  { body: '#FFEDD5', ear: '#FED7AA', accent: '#F97316', cheek: '#F97316' },
+  luteal:     { body: '#EDE9FE', ear: '#DDD6FE', accent: '#8B5CF6', cheek: '#8B5CF6' },
 }
 
-const config: Record<Phase, {
-  body: string
-  ear: string
-  accent: string
-  eyes: 'sleepy' | 'open' | 'sparkle' | 'gentle'
-  mouth: 'flat' | 'small' | 'wide' | 'soft'
-}> = {
-  menstrual:  { body: '#FECDD3', ear: '#F4A0B4', accent: '#E8627C', eyes: 'sleepy',  mouth: 'flat'  },
-  follicular: { body: '#BBF7D0', ear: '#8CCBA8', accent: '#3D9E6E', eyes: 'open',    mouth: 'small' },
-  ovulation:  { body: '#FEF9C3', ear: '#F5D07A', accent: '#C8960A', eyes: 'sparkle', mouth: 'wide'  },
-  luteal:     { body: '#DDD6FE', ear: '#A8C4E8', accent: '#4A80C8', eyes: 'gentle',  mouth: 'soft'  },
-}
+function Face({ phase, pal }: { phase: Phase; pal: typeof PAL[Phase] }) {
+  const eyeY = 52
+  const lX = 38, rX = 62
 
-function Eyes({ type, accent }: { type: typeof config[Phase]['eyes']; accent: string }) {
-  if (type === 'sleepy') return (
-    <>
-      <path d="M 25 36 Q 29 32 33 36" stroke={accent} strokeWidth="2.5" fill="none" strokeLinecap="round" />
-      <path d="M 47 36 Q 51 32 55 36" stroke={accent} strokeWidth="2.5" fill="none" strokeLinecap="round" />
-    </>
+  if (phase === 'menstrual') return (
+    <g stroke={pal.accent} strokeLinecap="round" fill="none">
+      <g style={{ animation: 'flux-mascot-peek 6s ease-in-out infinite' }}>
+        <path d={`M ${lX-5} ${eyeY-1} Q ${lX} ${eyeY+2} ${lX+5} ${eyeY-1}`} strokeWidth="2.4" />
+        <path d={`M ${rX-5} ${eyeY-1} Q ${rX} ${eyeY+2} ${rX+5} ${eyeY-1}`} strokeWidth="2.4" />
+      </g>
+      <path d="M 46 64 Q 50 66 54 64" strokeWidth="1.8" />
+      <ellipse cx="50" cy="86" rx="8" ry="2.5" fill={pal.accent} stroke="none" opacity="0.35" />
+      <g fill={pal.accent} stroke="none" opacity="0.7">
+        <text x="76" y="32" fontSize="10" fontFamily="var(--font-newsreader,serif)" fontStyle="italic"
+          style={{ animation: 'flux-sparkle-rise 3.2s ease-in-out infinite' }}>z</text>
+        <text x="80" y="22" fontSize="6" fontFamily="var(--font-newsreader,serif)" fontStyle="italic"
+          style={{ animation: 'flux-sparkle-rise 3.2s ease-in-out infinite', animationDelay: '1.6s' }}>z</text>
+      </g>
+    </g>
   )
-  if (type === 'open') return (
-    <>
-      <circle cx="29" cy="35" r="4.5" fill={accent} />
-      <circle cx="51" cy="35" r="4.5" fill={accent} />
-      <circle cx="30.5" cy="33.5" r="1.5" fill="white" />
-      <circle cx="52.5" cy="33.5" r="1.5" fill="white" />
-    </>
+
+  if (phase === 'follicular') return (
+    <g>
+      <g style={{ animation: 'flux-mascot-blink 5s ease-in-out infinite', transformOrigin: `${lX}px ${eyeY}px` }}>
+        <circle cx={lX} cy={eyeY} r="2.6" fill={pal.accent} />
+        <circle cx={lX - 0.8} cy={eyeY - 0.8} r="0.8" fill="white" />
+      </g>
+      <g style={{ animation: 'flux-mascot-blink 5s ease-in-out infinite', transformOrigin: `${rX}px ${eyeY}px` }}>
+        <circle cx={rX} cy={eyeY} r="2.6" fill={pal.accent} />
+        <circle cx={rX - 0.8} cy={eyeY - 0.8} r="0.8" fill="white" />
+      </g>
+      <path d="M 44 63 Q 50 67 56 63" stroke={pal.accent} strokeWidth="2.2" fill="none" strokeLinecap="round" />
+      <path d="M 50 22 Q 54 18 58 22 Q 54 26 50 22" fill={pal.accent} opacity="0.6"
+        style={{ animation: 'flux-breathe 4s ease-in-out infinite', transformOrigin: '50px 24px' }} />
+    </g>
   )
-  if (type === 'sparkle') return (
-    <>
-      <circle cx="29" cy="35" r="5.5" fill={accent} />
-      <circle cx="51" cy="35" r="5.5" fill={accent} />
-      <circle cx="31" cy="33" r="2"   fill="white" />
-      <circle cx="53" cy="33" r="2"   fill="white" />
-      {/* tiny sparkle star */}
-      <text x="60" y="22" fontSize="8" fill={accent} opacity="0.8">✦</text>
-      <text x="16" y="20" fontSize="6" fill={accent} opacity="0.6">✦</text>
-    </>
+
+  if (phase === 'ovulation') return (
+    <g>
+      <g style={{ animation: 'flux-mascot-blink 4s ease-in-out infinite', transformOrigin: `${lX}px ${eyeY}px` }}>
+        <circle cx={lX} cy={eyeY} r="3" fill={pal.accent} />
+        <circle cx={lX - 1} cy={eyeY - 1} r="1" fill="white" />
+      </g>
+      <g style={{ animation: 'flux-mascot-blink 4s ease-in-out infinite', transformOrigin: `${rX}px ${eyeY}px` }}>
+        <circle cx={rX} cy={eyeY} r="3" fill={pal.accent} />
+        <circle cx={rX - 1} cy={eyeY - 1} r="1" fill="white" />
+      </g>
+      <g fill={pal.accent} style={{ animation: 'flux-sparkle 2.4s ease-in-out infinite' }}>
+        <path d="M 20 42 l 1.5 -3 l 1.5 3 l 3 1.5 l -3 1.5 l -1.5 3 l -1.5 -3 l -3 -1.5 z" opacity="0.7" />
+      </g>
+      <g fill={pal.accent} style={{ animation: 'flux-sparkle 2.4s ease-in-out infinite', animationDelay: '0.8s' }}>
+        <path d="M 82 44 l 1 -2 l 1 2 l 2 1 l -2 1 l -1 2 l -1 -2 l -2 -1 z" opacity="0.8" />
+      </g>
+      <path d="M 42 62 Q 50 72 58 62" stroke={pal.accent} strokeWidth="2.4" fill="none" strokeLinecap="round" />
+    </g>
   )
-  // gentle (luteal)
+
+  // luteal
   return (
-    <>
-      <path d="M 25 33 Q 29 38 33 33" fill={accent} stroke={accent} strokeWidth="0.5" />
-      <path d="M 47 33 Q 51 38 55 33" fill={accent} stroke={accent} strokeWidth="0.5" />
-      <circle cx="29" cy="33" r="1" fill="white" />
-      <circle cx="51" cy="33" r="1" fill="white" />
-    </>
+    <g>
+      <ellipse cx={lX} cy={eyeY} rx="3" ry="2" fill={pal.accent} opacity="0.85" />
+      <ellipse cx={rX} cy={eyeY} rx="3" ry="2" fill={pal.accent} opacity="0.85" />
+      <path d="M 44 63 Q 50 66 56 63" stroke={pal.accent} strokeWidth="2.2" fill="none" strokeLinecap="round" />
+    </g>
   )
 }
 
-function Mouth({ type, accent }: { type: typeof config[Phase]['mouth']; accent: string }) {
-  if (type === 'flat')  return <path d="M 34 46 L 46 46" stroke={accent} strokeWidth="2" strokeLinecap="round" />
-  if (type === 'small') return <path d="M 33 45 Q 40 50 47 45" stroke={accent} strokeWidth="2" fill="none" strokeLinecap="round" />
-  if (type === 'wide')  return <path d="M 30 44 Q 40 52 50 44" stroke={accent} strokeWidth="2.5" fill="none" strokeLinecap="round" />
-  // soft
-  return <path d="M 35 46 Q 40 49 45 46" stroke={accent} strokeWidth="2" fill="none" strokeLinecap="round" />
-}
+export default function Mascot({ phase, className = 'w-16 h-16', size }: Props) {
+  const pal = PAL[phase]
+  const sizeStyle = size ? { width: size, height: size } : {}
 
-export default function Mascot({ phase, className = 'w-16 h-16' }: Props) {
-  const c = config[phase]
   return (
-    <svg
-      viewBox="0 0 80 80"
-      className={className}
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Left ear */}
-      <ellipse cx="22" cy="20" rx="10" ry="12" fill={c.ear} />
-      {/* Right ear */}
-      <ellipse cx="58" cy="20" rx="10" ry="12" fill={c.ear} />
-      {/* Inner ear left */}
-      <ellipse cx="22" cy="21" rx="5.5" ry="7" fill={c.body} opacity="0.7" />
-      {/* Inner ear right */}
-      <ellipse cx="58" cy="21" rx="5.5" ry="7" fill={c.body} opacity="0.7" />
-      {/* Main body */}
-      <circle cx="40" cy="46" r="28" fill={c.body} />
-      {/* Cheek blush left */}
-      <ellipse cx="20" cy="46" rx="7" ry="4" fill={c.accent} opacity="0.18" />
-      {/* Cheek blush right */}
-      <ellipse cx="60" cy="46" rx="7" ry="4" fill={c.accent} opacity="0.18" />
-      {/* Eyes */}
-      <Eyes type={c.eyes} accent={c.accent} />
-      {/* Mouth */}
-      <Mouth type={c.mouth} accent={c.accent} />
-    </svg>
+    <div className="mascot-breathe" style={sizeStyle}>
+      <div className="mascot-sway">
+        <svg
+          viewBox="0 0 100 100"
+          className={size ? '' : className}
+          style={size ? { width: size, height: size, display: 'block', overflow: 'visible' } : { display: 'block', overflow: 'visible' }}
+          aria-hidden
+        >
+          {/* Left ear */}
+          <path d="M 22 36 Q 18 18 30 22 Q 34 28 32 36 Z" fill={pal.ear} />
+          <path d="M 24 32 Q 24 26 28 26 Q 30 28 30 33 Z" fill={pal.body} opacity="0.7" />
+          {/* Right ear (slightly asymmetric) */}
+          <path d="M 78 36 Q 84 16 70 22 Q 66 28 68 38 Z" fill={pal.ear} />
+          <path d="M 76 32 Q 76 26 72 26 Q 70 28 70 33 Z" fill={pal.body} opacity="0.7" />
+          {/* Body — blobby, not perfect oval */}
+          <path d="M 50 30 Q 78 30 80 56 Q 82 76 60 80 Q 50 82 40 80 Q 18 76 20 56 Q 22 30 50 30 Z" fill={pal.body} />
+          {/* Cheek blush */}
+          <ellipse cx="28" cy="60" rx="6" ry="4" fill={pal.cheek} opacity="0.18" />
+          <ellipse cx="72" cy="60" rx="6" ry="4" fill={pal.cheek} opacity="0.18" />
+          {/* Phase face */}
+          <Face phase={phase} pal={pal} />
+          {/* Whiskers */}
+          <g stroke={pal.accent} strokeWidth="1" strokeLinecap="round" opacity="0.45">
+            <line x1="14" y1="62" x2="22" y2="62" />
+            <line x1="14" y1="66" x2="22" y2="65" />
+            <line x1="78" y1="62" x2="86" y2="62" />
+            <line x1="78" y1="65" x2="86" y2="66" />
+          </g>
+        </svg>
+      </div>
+    </div>
   )
 }

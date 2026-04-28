@@ -21,12 +21,12 @@ export default async function SettingsPage() {
   const connections = (data ?? []) as PartnerConnection[]
 
   return (
-    <main className="min-h-screen bg-surface dark:bg-surface-dark pb-24">
+    <main className="min-h-screen pb-24 page-enter" style={{ backgroundColor: '#F7F1E9' }}>
       <div className="max-w-sm mx-auto px-4">
 
         <div className="pt-14 pb-6">
           <p className="section-label mb-1">Flux</p>
-          <h1 className="text-[32px] font-black tracking-tight text-gray-900 dark:text-white">
+          <h1 className="text-[30px] font-semibold tracking-tight serif-italic" style={{ color: '#1F4E4A' }}>
             Settings
           </h1>
         </div>
@@ -34,21 +34,22 @@ export default async function SettingsPage() {
         <div className="space-y-3">
 
           {/* Partner access */}
-          <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-soft p-5 space-y-4">
+          <div className="card p-5 space-y-4">
             <div className="flex items-center justify-between">
               <p className="section-label">Partner access</p>
               <Link
                 href="/partner"
-                className="text-xs font-semibold text-gray-500 dark:text-gray-400 underline underline-offset-2"
+                className="text-[12px] font-semibold underline underline-offset-2"
+                style={{ color: '#8FA09E' }}
               >
                 + Invite
               </Link>
             </div>
 
             {connections.length === 0 ? (
-              <p className="text-sm text-gray-400 leading-relaxed">
+              <p className="text-[13px] leading-relaxed" style={{ color: '#8FA09E' }}>
                 No partners added.{' '}
-                <Link href="/partner" className="underline underline-offset-2 text-gray-600 dark:text-gray-300">
+                <Link href="/partner" className="underline underline-offset-2" style={{ color: '#3F5A57' }}>
                   Invite someone
                 </Link>
               </p>
@@ -56,30 +57,39 @@ export default async function SettingsPage() {
               <PartnerAccessManager connections={connections} />
             )}
 
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-[12px] leading-relaxed" style={{ color: '#8FA09E' }}>
               Partners only see your current phase card — never your raw logs or dates.
               You can revoke access any time.
             </p>
           </div>
 
           {/* Reminders */}
-          <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-soft p-5 space-y-3">
+          <div className="card p-5 space-y-3">
             <p className="section-label">Daily reminder</p>
             <NotificationToggle />
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-[12px] leading-relaxed" style={{ color: '#8FA09E' }}>
               Fires once a day if you haven&apos;t checked in yet. No other notifications.
             </p>
           </div>
 
           {/* Account */}
-          <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-soft p-5 space-y-2">
+          <div className="card p-5 space-y-2">
             <p className="section-label">Account</p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-[13px]" style={{ color: '#8FA09E' }}>
               Signed in as{' '}
-              <span className="font-semibold text-gray-700 dark:text-gray-200">
+              <span className="font-semibold" style={{ color: '#3F5A57' }}>
                 {user.email ?? 'anonymous'}
               </span>
             </p>
+          </div>
+
+          {/* About */}
+          <div className="card p-5 space-y-1">
+            <p className="section-label">About</p>
+            <p className="text-[13px] leading-relaxed" style={{ color: '#8FA09E' }}>
+              Flux — know yourself, move with your cycle.
+            </p>
+            <p className="text-[11px]" style={{ color: '#C4B8AC' }}>v0.1 · built with care</p>
           </div>
 
         </div>

@@ -3,11 +3,9 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { calculatePhase } from '@/lib/phaseEngine'
 import DailyLogForm from '@/components/daily/DailyLogForm'
+import BottomNav from '@/components/nav/BottomNav'
 import type { UserProfile, DailyLog } from '@/types/database'
 
-const ENERGY_EMOJI: Record<string, string> = {
-  low: '🪫', medium: '🔋', high: '⚡',
-}
 
 export default async function LogPage() {
   const supabase = createClient()
@@ -44,32 +42,29 @@ export default async function LogPage() {
 
   if (existingLog) {
     return (
-      <main className="min-h-screen bg-surface dark:bg-surface-dark px-4">
+      <main className="min-h-screen px-4 pb-28 page-enter" style={{ backgroundColor: '#F7F1E9' }}>
         <div className="max-w-sm mx-auto pt-12 pb-10 space-y-5">
 
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-[24px] font-semibold serif-italic" style={{ color: '#1F4E4A' }}>
               Today&apos;s check-in
             </h1>
-            <Link href="/" className="text-sm text-gray-400 underline underline-offset-2">
+            <Link href="/" className="text-[12px] underline underline-offset-2" style={{ color: '#8FA09E' }}>
               Home
             </Link>
           </div>
 
-          <div className="bg-white dark:bg-gray-900 rounded-3xl shadow-soft p-5 space-y-4">
+          <div className="card p-5 space-y-4">
             <div className="flex items-center justify-between">
               <span className="section-label">Energy</span>
-              <span className="text-lg">
-                {ENERGY_EMOJI[existingLog.energy_level] ?? ''}{' '}
-                <span className="text-sm font-semibold text-gray-700 dark:text-gray-200 capitalize ml-1">
-                  {existingLog.energy_level}
-                </span>
+              <span className="text-[14px] font-semibold capitalize" style={{ color: '#3F5A57' }}>
+                {existingLog.energy_level}
               </span>
             </div>
 
             <div className="flex items-center justify-between">
               <span className="section-label">Mood</span>
-              <span className="text-sm font-semibold text-gray-700 dark:text-gray-200 capitalize">
+              <span className="text-[14px] font-semibold capitalize" style={{ color: '#3F5A57' }}>
                 {existingLog.mood}
               </span>
             </div>
@@ -81,7 +76,8 @@ export default async function LogPage() {
                   {existingLog.symptoms.map((s) => (
                     <span
                       key={s}
-                      className="px-2.5 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-xs font-medium text-gray-600 dark:text-gray-300"
+                      className="px-2.5 py-1 rounded-full text-[12px] font-medium"
+                      style={{ background: '#F2E8D9', color: '#3F5A57' }}
                     >
                       {s}
                     </span>
@@ -91,11 +87,12 @@ export default async function LogPage() {
             )}
           </div>
 
-          <p className="text-center text-xs text-gray-400">
+          <p className="text-center text-[12px]" style={{ color: '#8FA09E' }}>
             Already logged for today. See you tomorrow.
           </p>
 
         </div>
+        <BottomNav />
       </main>
     )
   }

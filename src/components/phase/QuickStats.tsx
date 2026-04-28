@@ -31,11 +31,11 @@ export default function QuickStats({ phase }: Props) {
       ].map(({ icon, label, sub }) => (
         <div
           key={sub}
-          className={`${cls} rounded-2xl p-3.5 flex flex-col items-center gap-1.5 text-center`}
+          className={`${cls} rounded-2xl p-3.5 flex flex-col items-center gap-1 text-center`}
         >
           <span className="text-2xl leading-none">{icon}</span>
-          <span className="text-[9px] font-bold uppercase tracking-wider opacity-50">{sub}</span>
-          <span className="text-[11px] font-bold leading-tight">{label}</span>
+          <span className="text-[13px] font-bold leading-tight text-[#1A1814] dark:text-[#F5F3F0]">{label}</span>
+          <span className="text-[11px] font-medium text-[#5C5754] dark:text-[#A8A4A0]">{sub}</span>
         </div>
       ))}
     </div>

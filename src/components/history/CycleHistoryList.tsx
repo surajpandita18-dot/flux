@@ -4,16 +4,16 @@ interface Props {
   cycles: CycleLog[]
 }
 
+const flowDotColor: Record<string, string> = {
+  light:  '#D89BA8',
+  medium: '#C76B4A',
+  heavy:  '#8B3030',
+}
+
 const flowLabel: Record<string, string> = {
   light:  'Light',
   medium: 'Medium',
   heavy:  'Heavy',
-}
-
-const flowDot: Record<string, string> = {
-  light:  'bg-pink-200',
-  medium: 'bg-pink-400',
-  heavy:  'bg-pink-600',
 }
 
 function formatDate(iso: string): string {
@@ -41,40 +41,46 @@ export default function CycleHistoryList({ cycles }: Props) {
           cycle.period_start_date,
           nextCycle?.period_start_date,
         )
+        const dotColor = flowDotColor[cycle.flow_intensity] ?? '#C4B8AC'
 
         return (
           <div
             key={cycle.id}
-            className="rounded-2xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 p-4 space-y-2"
+            className="card p-4 space-y-2"
           >
             <div className="flex items-center justify-between">
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">
+              <span className="text-[14px] font-semibold" style={{ color: '#1F4E4A' }}>
                 {formatDate(cycle.period_start_date)}
               </span>
-              <span className="text-xs text-gray-400">{length}</span>
+              <span className="text-[12px]" style={{ color: '#8FA09E' }}>{length}</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${flowDot[cycle.flow_intensity] ?? 'bg-gray-300'}`} />
-              <span className="text-xs text-gray-500 dark:text-gray-400">
+              <span
+                className="w-2 h-2 rounded-full flex-shrink-0"
+                style={{ backgroundColor: dotColor }}
+              />
+              <span className="text-[12px]" style={{ color: '#8FA09E' }}>
                 {flowLabel[cycle.flow_intensity] ?? cycle.flow_intensity} flow
               </span>
               {cycle.period_end_date && (
-                <span className="text-xs text-gray-400 ml-auto">
+                <span className="text-[11px] ml-auto" style={{ color: '#C4B8AC' }}>
                   ended {formatDate(cycle.period_end_date)}
                 </span>
               )}
             </div>
 
             {cycle.notes && (
-              <p className="text-xs text-gray-400 italic line-clamp-2">{cycle.notes}</p>
+              <p className="text-[12px] italic line-clamp-2" style={{ color: '#8FA09E' }}>
+                {cycle.notes}
+              </p>
             )}
           </div>
         )
       })}
 
       {cycles.length === 12 && (
-        <p className="text-center text-xs text-gray-300 dark:text-gray-600 pt-2">
+        <p className="text-center text-[11px] pt-2" style={{ color: '#C4B8AC' }}>
           Showing last 12 cycles
         </p>
       )}

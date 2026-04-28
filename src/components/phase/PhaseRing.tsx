@@ -1,109 +1,150 @@
+'use client'
+
+import { useState, useEffect } from 'react'
 import type { Phase, PhaseResult } from '@/lib/phaseEngine'
-import Mascot from '@/components/mascot/Mascot'
+
+const PHASE_ACCENT: Record<Phase, string> = {
+  menstrual:  '#C76B4A',
+  follicular: '#7A8F5C',
+  ovulation:  '#D49A3D',
+  luteal:     '#8B6F8C',
+}
+
+const PHASE_SOFT: Record<Phase, string> = {
+  menstrual:  '#F8DFD3',
+  follicular: '#E4E8D6',
+  ovulation:  '#F5E6C2',
+  luteal:     '#E5DCE5',
+}
+
+const PHASE_ORDER: Phase[] = ['menstrual', 'follicular', 'ovulation', 'luteal']
+
+interface ArcProps {
+  d: string
+  color: string
+  strokeW: number
+  arcLen: number
+  dur: number
+  delay: number
+  animKey: number
+}
+
+function FluxArc({ d, color, strokeW, arcLen, dur, delay, animKey }: ArcProps) {
+  const [drawn, setDrawn] = useState(false)
+
+  useEffect(() => {
+    setDrawn(false)
+    const t = setTimeout(() => setDrawn(true), 30 + delay)
+    return () => clearTimeout(t)
+  }, [animKey, delay])
+
+  return (
+    <path
+      d={d}
+      stroke={color}
+      strokeWidth={strokeW}
+      strokeLinecap="round"
+      fill="none"
+      style={{
+        strokeDasharray: arcLen,
+        strokeDashoffset: drawn ? 0 : arcLen,
+        transition: `stroke-dashoffset ${dur}ms cubic-bezier(0.22, 1, 0.36, 1)`,
+      }}
+    />
+  )
+}
 
 interface Props {
   phaseResult: PhaseResult
+  size?: number
+  animKey?: number
 }
 
-// Phase arc config — proportions of a 28-day cycle
-const SEGMENTS: { phase: Phase; days: number; color: string }[] = [
-  { phase: 'menstrual',  days: 5,  color: '#F4A0B4' },
-  { phase: 'follicular', days: 7,  color: '#8CCBA8' },
-  { phase: 'ovulation',  days: 4,  color: '#F5D07A' },
-  { phase: 'luteal',     days: 12, color: '#A8C4E8' },
-]
-
-const PHASE_CENTER_BG: Record<Phase, string> = {
-  menstrual:  '#FDF2F5',
-  follicular: '#EFF7F3',
-  ovulation:  '#FBF6E6',
-  luteal:     '#EEF3FB',
-}
-
-const PHASE_DISPLAY: Record<Phase, string> = {
-  menstrual:  'Menstrual Phase',
-  follicular: 'Follicular Phase',
-  ovulation:  'Ovulation Phase',
-  luteal:     'Luteal Phase',
-}
-
-function describeArc(
-  cx: number, cy: number, r: number,
-  startAngle: number, endAngle: number,
-): string {
-  const toRad = (deg: number) => (deg * Math.PI) / 180
-  const x1 = cx + r * Math.cos(toRad(startAngle))
-  const y1 = cy + r * Math.sin(toRad(startAngle))
-  const x2 = cx + r * Math.cos(toRad(endAngle))
-  const y2 = cy + r * Math.sin(toRad(endAngle))
-  const largeArc = endAngle - startAngle > 180 ? 1 : 0
-  return `M ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2}`
-}
-
-export default function PhaseRing({ phaseResult }: Props) {
+export default function PhaseRing({ phaseResult, size = 200, animKey = 0 }: Props) {
   const { phase, dayNumber, totalDays } = phaseResult
 
-  const totalDaysInConfig = SEGMENTS.reduce((s, seg) => s + seg.days, 0)
-  const cx = 100
-  const cy = 100
-  const r  = 72
-  const strokeWidth = 16
-  const gap = 3 // degrees gap between segments
+  const center  = size / 2
+  const radius  = size * 0.36
+  const strokeW = size * 0.08
+  const innerR  = size * 0.27
+  const gap     = 4
+  const arcSpan = 90 - gap
 
-  // Build arcs
-  let cursor = -90 // start at top
-  const arcs = SEGMENTS.map((seg) => {
-    const sweep  = (seg.days / totalDaysInConfig) * 360
-    const start  = cursor + gap / 2
-    const end    = cursor + sweep - gap / 2
-    cursor += sweep
-    return { ...seg, start, end }
+  const currentAccent  = PHASE_ACCENT[phase]
+  const phaseSoft      = PHASE_SOFT[phase]
+  const inactiveStroke = 'rgba(60,40,25,0.10)'
+
+  const arcs = PHASE_ORDER.map((k, i) => {
+    const startAng = -90 + i * 90 + gap / 2
+    const endAng   = startAng + arcSpan
+    return { key: k, startAng, endAng }
   })
 
-  const centerBg = PHASE_CENTER_BG[phase]
+  function polar(angDeg: number) {
+    const a = (angDeg * Math.PI) / 180
+    return { x: center + radius * Math.cos(a), y: center + radius * Math.sin(a) }
+  }
+
+  function arcPath(startAng: number, endAng: number) {
+    const s = polar(startAng)
+    const e = polar(endAng)
+    const large = endAng - startAng > 180 ? 1 : 0
+    return `M ${s.x.toFixed(2)} ${s.y.toFixed(2)} A ${radius} ${radius} 0 ${large} 1 ${e.x.toFixed(2)} ${e.y.toFixed(2)}`
+  }
+
+  const arcLen = (Math.PI * radius * arcSpan) / 180
+
+  const drawOrder = PHASE_ORDER
+    .map((k, i) => ({ k, i, isCurrent: k === phase }))
+    .sort((a, b) => (a.isCurrent ? 1 : 0) - (b.isCurrent ? 1 : 0))
 
   return (
-    <div className="card p-5 flex flex-col items-center">
-      {/* Phase ring + mascot */}
-      <div className="relative w-52 h-52">
-        <svg
-          viewBox="0 0 200 200"
-          className="w-full h-full"
-          aria-label={`Cycle ring — ${PHASE_DISPLAY[phase]}`}
-        >
-          {/* Center circle fill */}
-          <circle cx={cx} cy={cy} r={r - strokeWidth / 2 - 2} fill={centerBg} />
-
-          {/* Phase arc segments */}
-          {arcs.map((arc) => (
-            <path
-              key={arc.phase}
-              d={describeArc(cx, cy, r, arc.start, arc.end)}
-              stroke={arc.color}
-              strokeWidth={strokeWidth}
-              strokeLinecap="round"
-              fill="none"
-              opacity={arc.phase === phase ? 1 : 0.35}
+    <div style={{ position: 'relative', width: size, height: size }}>
+      <svg
+        width={size}
+        height={size}
+        viewBox={`0 0 ${size} ${size}`}
+        style={{ display: 'block' }}
+        aria-hidden
+      >
+        <circle cx={center} cy={center} r={innerR} fill={phaseSoft} />
+        {drawOrder.map(({ k, isCurrent }, drawIx) => {
+          const arc   = arcs.find(a => a.key === k)!
+          const color = isCurrent ? currentAccent : inactiveStroke
+          const delay = drawIx * 80
+          const dur   = isCurrent ? 720 : 420
+          return (
+            <FluxArc
+              key={k + '-' + animKey}
+              d={arcPath(arc.startAng, arc.endAng)}
+              color={color}
+              strokeW={strokeW}
+              arcLen={arcLen}
+              dur={dur}
+              delay={delay}
+              animKey={animKey}
             />
-          ))}
-        </svg>
+          )
+        })}
+      </svg>
 
-        {/* Mascot centered over SVG */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-0">
-          <p className="text-[36px] font-extrabold leading-none tracking-tight" style={{ color: '#1A1814' }}>
-            {dayNumber}
-          </p>
-          <Mascot phase={phase} className="w-14 h-14" />
-        </div>
-      </div>
-
-      {/* Phase label + cycle progress */}
-      <div className="mt-2 text-center space-y-0.5">
-        <p className="text-[13px] font-bold" style={{ color: '#5C5754' }}>
-          {PHASE_DISPLAY[phase]}
+      {/* Day number centered */}
+      <div
+        aria-label={`Day ${dayNumber} of ${totalDays}`}
+        style={{
+          position: 'absolute', inset: 0,
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+        }}
+      >
+        <p style={{ fontSize: 9, fontWeight: 600, letterSpacing: '0.32em', textTransform: 'uppercase', color: '#8FA09E', margin: 0 }}>
+          day
         </p>
-        <p className="text-[11px]" style={{ color: '#A8A4A0' }}>
-          Day {dayNumber} of {totalDays}
+        <p className="serif-italic" style={{ fontSize: size * 0.32, fontWeight: 500, lineHeight: 0.9, color: '#1F4E4A', margin: 0, letterSpacing: '-2px' }}>
+          {dayNumber}
+        </p>
+        <p style={{ fontSize: 9, color: '#8FA09E', margin: '4px 0 0', fontWeight: 500, letterSpacing: '0.22em', textTransform: 'uppercase' }}>
+          of {totalDays}
         </p>
       </div>
     </div>
