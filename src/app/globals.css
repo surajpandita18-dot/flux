@@ -3,27 +3,70 @@
 @tailwind utilities;
 
 @layer base {
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+
   html {
     -webkit-tap-highlight-color: transparent;
+    scrollbar-width: none;
   }
+  html::-webkit-scrollbar { display: none; }
 
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    @apply bg-white text-gray-900 antialiased;
+    @apply bg-gray-50 text-gray-900 antialiased;
     @apply dark:bg-gray-950 dark:text-gray-50;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
-  * {
-    @apply box-border;
-  }
+  * { @apply box-border; }
 }
 
 @layer components {
-  .touch-target {
-    @apply min-h-[44px] min-w-[44px];
+
+  /* ── Phase gradient headers (CSS classes are purge-safe for dynamic phase names) */
+  .phase-header-menstrual  { background: linear-gradient(160deg, #fda4af 0%, #fb7185 45%, #e11d48 100%); }
+  .phase-header-follicular { background: linear-gradient(160deg, #fde68a 0%, #fbbf24 45%, #d97706 100%); }
+  .phase-header-ovulation  { background: linear-gradient(160deg, #fed7aa 0%, #fb923c 45%, #f97316 100%); }
+  .phase-header-luteal     { background: linear-gradient(160deg, #ddd6fe 0%, #a78bfa 45%, #7c3aed 100%); }
+  .phase-header-landing    { background: linear-gradient(160deg, #f9a8d4 0%, #c084fc 50%, #818cf8 100%); }
+
+  /* ── Cards */
+  .card {
+    @apply bg-white dark:bg-gray-900 rounded-3xl shadow-card;
   }
 
-  .phase-card {
-    @apply rounded-2xl p-5 shadow-sm;
+  /* ── Legacy phase-card (keep for compatibility) */
+  .touch-target { @apply min-h-[44px] min-w-[44px]; }
+  .phase-card   { @apply rounded-2xl p-5; }
+
+  /* ── Shared input */
+  .input {
+    @apply w-full min-h-[52px] px-4 py-3.5 rounded-2xl
+           border-0 bg-gray-100 dark:bg-gray-800
+           text-gray-900 dark:text-white
+           placeholder-gray-400 dark:placeholder-gray-500
+           focus:outline-none focus:ring-2 focus:ring-gray-900/15 dark:focus:ring-white/15
+           text-[16px] font-medium transition-all;
+  }
+
+  /* ── Primary CTA */
+  .btn-primary {
+    @apply flex items-center justify-center w-full min-h-[54px]
+           bg-gray-900 dark:bg-white
+           text-white dark:text-gray-900
+           font-semibold text-[15px] rounded-2xl
+           transition-all active:scale-[0.98]
+           disabled:opacity-40 disabled:cursor-not-allowed;
+  }
+
+  /* ── Section label */
+  .section-label {
+    @apply text-[10px] font-bold uppercase tracking-[0.12em] text-gray-400;
+  }
+
+  /* ── Safe area */
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 1rem);
   }
 }

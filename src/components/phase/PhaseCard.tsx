@@ -17,7 +17,7 @@ interface Props {
   displayName?: string
 }
 
-export default function PhaseCard({ phaseResult, phaseData, displayName }: Props) {
+export default function PhaseCard({ phaseResult, phaseData }: Props) {
   const styles = phaseStyles[phaseResult.phase]
 
   const periodNote =
@@ -28,28 +28,26 @@ export default function PhaseCard({ phaseResult, phaseData, displayName }: Props
         : null
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2.5">
 
-      {/* Main phase card */}
-      <div className={`phase-card ${styles.card}`}>
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <span className={`w-2 h-2 rounded-full ${styles.dot}`} />
-            <span className={`text-xs font-bold uppercase tracking-widest ${styles.label}`}>
-              {phaseData.name}
-            </span>
-          </div>
-          <span className="text-xs text-gray-400">
-            Day {phaseResult.dayNumber} / {phaseResult.totalDays}
+      {/* One-liner + period note */}
+      <div className={`${styles.card} rounded-3xl px-5 py-4`}>
+        <div className="flex items-center gap-2 mb-3">
+          <span className={`w-2 h-2 rounded-full flex-shrink-0 ${styles.dot}`} />
+          <span className={`text-[10px] font-bold uppercase tracking-[0.14em] ${styles.label}`}>
+            {phaseData.name}
+          </span>
+          <span className="ml-auto text-[11px] text-gray-400">
+            Day {phaseResult.dayNumber} of {phaseResult.totalDays}
           </span>
         </div>
 
-        <p className="text-gray-800 dark:text-gray-100 text-[15px] leading-relaxed">
+        <p className="text-gray-800 dark:text-gray-100 text-[15px] leading-[1.6] font-medium">
           {phaseData.one_liner}
         </p>
 
         {periodNote && (
-          <p className="mt-3 text-xs text-gray-400 dark:text-gray-500">
+          <p className={`mt-3 text-xs font-semibold ${styles.label} opacity-80`}>
             {periodNote}
           </p>
         )}
@@ -58,7 +56,7 @@ export default function PhaseCard({ phaseResult, phaseData, displayName }: Props
       {/* Quick stats */}
       <QuickStats phase={phaseResult.phase} />
 
-      {/* Expandable tip sections */}
+      {/* Tips */}
       <TipAccordion
         label="Nutrition today"
         content={phaseData.nutrition.tip_card}

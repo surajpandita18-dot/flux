@@ -11,7 +11,6 @@ export default function StartButton() {
     try {
       const supabase = createClient()
       await supabase.auth.signInAnonymously()
-      // Hard redirect so the server picks up the session cookie on mobile
       window.location.href = '/onboarding'
     } catch {
       setLoading(false)
@@ -19,28 +18,45 @@ export default function StartButton() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950 flex flex-col items-center justify-center px-6">
-      <div className="max-w-sm w-full space-y-6 text-center">
-        <div className="space-y-2">
-          <h1 className="text-4xl font-bold text-gray-900 dark:text-white">Flux</h1>
-          <p className="text-gray-400 text-base leading-relaxed">
-            Your cycle, understood.
+    <div className="phase-header-landing min-h-screen flex flex-col">
+
+      {/* Content */}
+      <div className="flex-1 flex flex-col justify-center px-7 pt-safe">
+        <div className="max-w-sm mx-auto w-full">
+
+          {/* Wordmark */}
+          <div className="mb-3">
+            <h1 className="text-white text-[56px] font-black tracking-[-2px] leading-none">
+              Flux
+            </h1>
+          </div>
+
+          <p className="text-white/75 text-[18px] leading-relaxed font-medium max-w-[240px]">
+            Know yourself.<br />Move with your cycle.
           </p>
         </div>
-
-        <button
-          type="button"
-          onClick={handleStart}
-          disabled={loading}
-          className="w-full min-h-[52px] bg-gray-900 dark:bg-white text-white dark:text-gray-900 font-semibold rounded-2xl px-4 disabled:opacity-50"
-        >
-          {loading ? 'Starting…' : 'Get started'}
-        </button>
-
-        <p className="text-xs text-gray-300 dark:text-gray-600">
-          No account needed. Your data stays private.
-        </p>
       </div>
+
+      {/* Bottom sheet */}
+      <div className="bg-white dark:bg-gray-950 rounded-t-[2rem] px-6 pt-8 pb-10">
+        <div className="max-w-sm mx-auto space-y-4">
+
+          <button
+            type="button"
+            onClick={handleStart}
+            disabled={loading}
+            className="w-full min-h-[56px] bg-gray-950 dark:bg-white text-white dark:text-gray-900 font-bold text-[16px] rounded-2xl tracking-tight transition-all active:scale-[0.98] disabled:opacity-50"
+          >
+            {loading ? 'Starting…' : 'Get started'}
+          </button>
+
+          <p className="text-xs text-gray-400 text-center leading-relaxed">
+            No account needed. Your data stays on your device.
+          </p>
+
+        </div>
+      </div>
+
     </div>
   )
 }
